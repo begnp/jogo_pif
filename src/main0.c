@@ -1,12 +1,7 @@
+#include "camera.h"
+#include "player.h"
 #include "raylib.h"
 #include <stdio.h>
-
-typedef struct Player {
-    Rectangle rect;
-    Vector2 velocity;
-    bool canJump;
-	Texture texture;
-} Player;
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 450
@@ -16,10 +11,10 @@ typedef struct Player {
 #define GRAVITY 500.0f
 
 int main(void) {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Conceito 1: Saltador Quadrado");
-	
-	
-    
+
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Conceito 1: Saltador Quadrado");	
+
+
     Player player = {0};
     player.rect.x = SCREEN_WIDTH / 2.0f;
     player.rect.y = SCREEN_HEIGHT - 100.0f;
@@ -27,7 +22,7 @@ int main(void) {
     player.rect.height = 0;
     player.velocity = (Vector2){0, 0};
     player.canJump = false;
-	player.texture = LoadTexture("./assets/snorlax.png");
+	player.texture = LoadTexture("./assets/Ellie_f0.png");
 	
 	Rectangle floor = {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20};
     
@@ -39,6 +34,8 @@ int main(void) {
     int numPlatforms = sizeof(platforms) / sizeof(platforms[0]);
 	
 	SetTargetFPS(60);
+
+	Camera2D camera = InitCamera((Vector2){player.rect.x, player.rect.y}, (Vector2){400, 225});
 	
 	while(!WindowShouldClose()) {
 		float dt = GetFrameTime();
@@ -80,15 +77,17 @@ int main(void) {
 			}
 		}
 		
+		UpdateCameraToFollowPlayer(&camera, (Vector2){player.rect.x, player.rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
 		
 		BeginDrawing();
-		
-			ClearBackground(SKYBLUE);
+		ClearBackground(SKYBLUE);
+		BeginMode2D(camera);
+
 			
 			//DrawTexture(snorlax, player.rect.x, player.rect.y, WHITE);
 			
 			DrawRectangleRec(player.rect, WHITE);
-			DrawTextureEx(player.texture, (Vector2){player.rect.x, player.rect.y - 50}, 0.0f, 0.1f, WHITE);
+			DrawTextureEx(player.texture, (Vector2){player.rect.x, player.rect.y - 50}, 0.0f, 0.25f, WHITE);
 			
 			DrawRectangleRec(floor, GREEN);
 			
