@@ -4,7 +4,7 @@ CFLAGS   := -Iinclude -O2 -Wall -Wextra -Wno-unused-parameter
 LDFLAGS  := -lraylib -lopengl32 -lgdi32 -lwinmm
 SRC      := $(wildcard src/*.c)
 BIN_DIR  := bin
-OUT_EXE  := $(BIN_DIR)/raygame.exe
+OUT_EXE  := $(BIN_DIR)/metroid_leveling.exe
 
 .PHONY: all run clean
 

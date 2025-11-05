@@ -5,7 +5,7 @@
       "name": "Debug (GDB)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/bin/raygame.exe",
+      "program": "${workspaceFolder}/bin/metroid_leveling.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
