@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build (Make)",
+      "type": "shell",
+      "command": "C:\\msys64\\usr\\bin\\make.exe",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+        }
+      },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Run",
+      "type": "shell",
+      "command": "C:\\msys64\\usr\\bin\\make.exe run",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+        }
+      }
+    },
+    {
+      "label": "Clean",
+      "type": "shell",
+      "command": "C:\\msys64\\usr\\bin\\make.exe clean",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+        }
+      }
+    }
+  ]
+}
