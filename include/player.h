@@ -8,6 +8,8 @@ typedef struct Player {
     Vector2 position;
     Vector2 velocity;
     bool canJump;
+    bool attacking;
+    bool facing; // 0 para a direita e 1 para a esquerda
 	Texture texture;
 } Player;
 

@@ -12,11 +12,17 @@
 
 int main(void) {
 
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Conceito 1: Saltador Quadrado");	
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Conceito 1: Saltador Quadrado");
+
+	Image r0 = LoadImage("./assets/Ellie_f0_right.png");
+	Image r1 = LoadImage("./assets/Ellie_f0_left.png");
+	
+	Image r0_a = LoadImage("./assets/Ellie_f_a_right.png");
+	Image r1_a = LoadImage("./assets/Ellie_f_a_left.png");
 
 
     Player player = {0};
-	player.texture = LoadTexture("./assets/Ellie_f0.png");
+	player.texture = LoadTextureFromImage(r0);
 	player.position.x = SCREEN_WIDTH / 2.0f;
     player.position.y = SCREEN_HEIGHT - 100.0f;
     player.rect.x = player.position.x;
@@ -25,6 +31,10 @@ int main(void) {
     player.rect.height = (float) player.texture.height * 0.2;
     player.velocity = (Vector2){0, 0};
     player.canJump = false;
+	player.attacking = false;
+	player.facing = 0;
+
+	float a_timer = 0;
 	
 	Rectangle floor = {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20};
     
@@ -42,24 +52,58 @@ int main(void) {
 	
 	while(!WindowShouldClose()) {
 
+		double timer = GetTime();
+
+		float dt = GetFrameTime();
+
+		// printf("%f\n\n", timer);
+
+		if (player.attacking == true && (timer > a_timer + 0.5)) {
+			player.attacking = false;
+			if (player.facing == 0) {
+				player.texture = LoadTextureFromImage(r0);
+			}
+			else if (player.facing == 1) {
+				player.texture = LoadTextureFromImage(r1);
+			}
+		}
+
 		/* if (IsKeyPressed(KEY_F11)) {
 			ToggleFullscreen();
 		} */
-
-		float dt = GetFrameTime();
 		
 		player.velocity.x = 0;
 		
-		if (IsKeyDown(KEY_RIGHT)) {
+		if (IsKeyDown(KEY_D)) {
 			player.velocity.x = PLAYER_HOR_SPEED;
+			if (player.facing == 1 && player.attacking == false) {
+				player.texture = LoadTextureFromImage(r0);
+			}
+			player.facing = 0;
 		}
-		if (IsKeyDown(KEY_LEFT)) {
+
+		if (IsKeyDown(KEY_A)) {
 			player.velocity.x = -PLAYER_HOR_SPEED;
+			if (player.facing == 0 && player.attacking == false) {
+				player.texture = LoadTextureFromImage(r1);
+			}
+			player.facing = 1;
 		}
 		
-		if (IsKeyPressed(KEY_UP) && player.canJump) {
+		if (IsKeyDown(KEY_W) && player.canJump) {
 			player.velocity.y = PLAYER_JUMP_SPEED;
 			player.canJump = false;
+		}
+
+		if (IsKeyDown(KEY_SPACE) && player.attacking == false) {
+			a_timer = timer;
+			player.attacking = true;
+			if (player.facing == 0) {
+				player.texture = LoadTextureFromImage(r0_a);
+			}
+			else if (player.facing == 1) {
+				player.texture = LoadTextureFromImage(r1_a);
+			}
 		}
 		
 		player.velocity.y += GRAVITY * dt;
@@ -117,21 +161,3 @@ int main(void) {
     
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
