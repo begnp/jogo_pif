@@ -21,8 +21,20 @@ int main(void) {
 	Image r1_a = LoadImage("./assets/Ellie_f_a_left.png");
 
 
-    Player player = {0};
-	player.texture = LoadTextureFromImage(r0);
+    
+	Texture2D texRight = LoadTextureFromImage(r0);
+	Texture2D texLeft = LoadTextureFromImage(r1);
+	Texture2D texAttackRight = LoadTextureFromImage(r0_a);
+	Texture2D texAttackLeft = LoadTextureFromImage(r1_a);
+
+	UnloadImage(r0);
+	UnloadImage(r1);
+	UnloadImage(r0_a);
+	UnloadImage(r1_a); 
+
+	Player player = {0};
+
+	player.texture = texRight; //textura inicial
 	player.position.x = SCREEN_WIDTH / 2.0f;
     player.position.y = SCREEN_HEIGHT - 100.0f;
     player.rect.x = player.position.x;
@@ -61,10 +73,10 @@ int main(void) {
 		if (player.attacking == true && (timer > a_timer + 0.5)) {
 			player.attacking = false;
 			if (player.facing == 0) {
-				player.texture = LoadTextureFromImage(r0);
+				player.texture = texRight;
 			}
 			else if (player.facing == 1) {
-				player.texture = LoadTextureFromImage(r1);
+				player.texture = texLeft;
 			}
 		}
 
@@ -77,7 +89,7 @@ int main(void) {
 		if (IsKeyDown(KEY_D)) {
 			player.velocity.x = PLAYER_HOR_SPEED;
 			if (player.facing == 1 && player.attacking == false) {
-				player.texture = LoadTextureFromImage(r0);
+				player.texture = texRight;
 			}
 			player.facing = 0;
 		}
@@ -85,7 +97,7 @@ int main(void) {
 		if (IsKeyDown(KEY_A)) {
 			player.velocity.x = -PLAYER_HOR_SPEED;
 			if (player.facing == 0 && player.attacking == false) {
-				player.texture = LoadTextureFromImage(r1);
+				player.texture = texLeft;
 			}
 			player.facing = 1;
 		}
@@ -99,10 +111,10 @@ int main(void) {
 			a_timer = timer;
 			player.attacking = true;
 			if (player.facing == 0) {
-				player.texture = LoadTextureFromImage(r0_a);
+				player.texture = texAttackRight;
 			}
 			else if (player.facing == 1) {
-				player.texture = LoadTextureFromImage(r1_a);
+				player.texture = texAttackLeft;
 			}
 		}
 		
@@ -155,7 +167,10 @@ int main(void) {
 	
 	ToggleBorderlessWindowed();
 
-    UnloadTexture(player.texture);
+    UnloadTexture(texRight);
+	UnloadTexture(texLeft);
+	UnloadTexture(texAttackRight);
+	UnloadTexture(texAttackLeft);
 	
 	CloseWindow();
     
