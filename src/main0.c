@@ -16,17 +16,20 @@ int main(void) {
 
 
     Player player = {0};
-    player.rect.x = SCREEN_WIDTH / 2.0f;
-    player.rect.y = SCREEN_HEIGHT - 100.0f;
-    player.rect.width = 40;
-    player.rect.height = 0;
+	player.texture = LoadTexture("./assets/Ellie_f0.png");
+	player.position.x = SCREEN_WIDTH / 2.0f;
+    player.position.y = SCREEN_HEIGHT - 100.0f;
+    player.rect.x = player.position.x;
+    player.rect.y = player.position.y;
+    player.rect.width = (float) player.texture.width * 0.2;
+    player.rect.height = (float) player.texture.height * 0.2;
     player.velocity = (Vector2){0, 0};
     player.canJump = false;
-	player.texture = LoadTexture("./assets/Ellie_f0.png");
 	
 	Rectangle floor = {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20};
     
     Rectangle platforms[] = {
+		{300, 350, 100, 20},
         {100, 300, 200, 20},
         {400, 200, 150, 20},
         {500, 100, 100, 20}
@@ -35,9 +38,14 @@ int main(void) {
 	
 	SetTargetFPS(60);
 
-	Camera2D camera = InitCamera((Vector2){player.rect.x, player.rect.y}, (Vector2){400, 225});
+	Camera2D camera = InitCamera((Vector2){player.rect.x, player.rect.y}, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2});
 	
 	while(!WindowShouldClose()) {
+
+		/* if (IsKeyPressed(KEY_F11)) {
+			ToggleFullscreen();
+		} */
+
 		float dt = GetFrameTime();
 		
 		player.velocity.x = 0;
@@ -49,7 +57,7 @@ int main(void) {
 			player.velocity.x = -PLAYER_HOR_SPEED;
 		}
 		
-		if (IsKeyPressed(KEY_SPACE) && player.canJump) {
+		if (IsKeyPressed(KEY_UP) && player.canJump) {
 			player.velocity.y = PLAYER_JUMP_SPEED;
 			player.canJump = false;
 		}
@@ -70,25 +78,27 @@ int main(void) {
 		for (int i = 0; i < numPlatforms; i++) {
 			if (CheckCollisionRecs(player.rect, platforms[i])) {
 				if (player.velocity.y > 0) {
-					player.rect.y = platforms[i].y - player.rect.height;
-					player.velocity.y = 0;
-					player.canJump = true;
+					if (player.rect.y + (player.rect.height * 0.8) < platforms[i].y) {
+						player.rect.y = platforms[i].y - player.rect.height;
+						player.velocity.y = 0;
+						player.canJump = true;
+					}
 				}
 			}
 		}
 		
 		UpdateCameraToFollowPlayer(&camera, (Vector2){player.rect.x, player.rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+		Rectangle rectsource = {0.0f, 0.0f, (float) player.texture.width, (float) player.texture.height};
+		Rectangle rectdest = player.rect;
 		
 		BeginDrawing();
 		ClearBackground(SKYBLUE);
 		BeginMode2D(camera);
+			
+			//DrawRectangleRec(player.rect, WHITE);
+			DrawTexturePro(player.texture, rectsource, rectdest, (Vector2){0, 0}, 0.0f, WHITE);
 
-			
-			//DrawTexture(snorlax, player.rect.x, player.rect.y, WHITE);
-			
-			DrawRectangleRec(player.rect, WHITE);
-			DrawTextureEx(player.texture, (Vector2){player.rect.x, player.rect.y - 50}, 0.0f, 0.25f, WHITE);
-			
 			DrawRectangleRec(floor, GREEN);
 			
 			for (int i = 0; i < numPlatforms; i++) {
@@ -98,6 +108,8 @@ int main(void) {
 		EndDrawing();
 		
 	}
+	
+	ToggleBorderlessWindowed();
 
     UnloadTexture(player.texture);
 	

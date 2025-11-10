@@ -5,6 +5,7 @@
 
 typedef struct Player {
     Rectangle rect;
+    Vector2 position;
     Vector2 velocity;
     bool canJump;
 	Texture texture;
