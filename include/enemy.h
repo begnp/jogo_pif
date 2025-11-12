@@ -1,19 +1,20 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef ENEMY_H
+#define ENEMY_H
 
 #include "raylib.h"
 
-typedef struct Player {
+typedef struct Enemy {
+    int id_enemy;
     Rectangle rect;
     Vector2 position;
     Vector2 velocity;
     bool canJump;
     bool attacking;
     bool facing; // 0 para a direita e 1 para a esquerda
-    int hearts;
+    int health;
 	Texture texture;
-} Player;
+} Enemy;
 
-Player InitPlayer(Player *player, Texture initTex);
+Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy);
 
 #endif

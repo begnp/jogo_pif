@@ -1,10 +1,12 @@
 #include "camera.h"
+#include "enemy.h"
 #include "player.h"
 #include "raylib.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 450
+#define SCREEN_WIDTH 1000
+#define SCREEN_HEIGHT 600
 
 #define PLAYER_JUMP_SPEED -350.0f
 #define PLAYER_HOR_SPEED 200.0f
@@ -14,13 +16,12 @@ int main(void) {
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Conceito 1: Saltador Quadrado");
 
+
 	Image r0 = LoadImage("./assets/Ellie_f0_right.png");
 	Image r1 = LoadImage("./assets/Ellie_f0_left.png");
 	
 	Image r0_a = LoadImage("./assets/Ellie_f_a_right.png");
 	Image r1_a = LoadImage("./assets/Ellie_f_a_left.png");
-
-
     
 	Texture2D texRight = LoadTextureFromImage(r0);
 	Texture2D texLeft = LoadTextureFromImage(r1);
@@ -32,23 +33,27 @@ int main(void) {
 	UnloadImage(r0_a);
 	UnloadImage(r1_a); 
 
-	Player player = {0};
+	Player *helena = (Player *) malloc(sizeof(Player));
+	
+	*helena = InitPlayer(helena, texRight);
+	// Enemy *enemy = ;
+	// InitEnemy();
 
-	player.texture = texRight; //textura inicial
-	player.position.x = SCREEN_WIDTH / 2.0f;
-    player.position.y = SCREEN_HEIGHT - 100.0f;
-    player.rect.x = player.position.x;
-    player.rect.y = player.position.y;
-    player.rect.width = (float) player.texture.width * 0.2;
-    player.rect.height = (float) player.texture.height * 0.2;
-    player.velocity = (Vector2){0, 0};
-    player.canJump = false;
-	player.attacking = false;
-	player.facing = 0;
+	// helena->texture = texRight; //textura inicial
+	// helena->position.x = SCREEN_WIDTH / 2.0f;
+    // helena->position.y = 375.0f;
+    // helena->rect.x = helena->position.x;
+    // helena->rect.y = helena->position.y;
+    // helena->rect.width = (float) helena->texture.width * 0.2;
+    // helena->rect.height = (float) helena->texture.height * 0.2;
+    // helena->velocity = (Vector2){0, 0};
+    // helena->canJump = false;
+	// helena->attacking = false;
+	// helena->facing = 0;
 
 	float a_timer = 0;
 	
-	Rectangle floor = {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20};
+	Rectangle floor = {0, 450, SCREEN_WIDTH, 20};
     
     Rectangle platforms[] = {
 		{300, 350, 100, 20},
@@ -60,7 +65,7 @@ int main(void) {
 	
 	SetTargetFPS(60);
 
-	Camera2D camera = InitCamera((Vector2){player.rect.x, player.rect.y}, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2});
+	Camera2D camera = InitCamera((Vector2){helena->rect.x, helena->rect.y}, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2});
 	
 	while(!WindowShouldClose()) {
 
@@ -70,13 +75,13 @@ int main(void) {
 
 		// printf("%f\n\n", timer);
 
-		if (player.attacking == true && (timer > a_timer + 0.5)) {
-			player.attacking = false;
-			if (player.facing == 0) {
-				player.texture = texRight;
+		if (helena->attacking == true && (timer > a_timer + 0.5)) {
+			helena->attacking = false;
+			if (helena->facing == 0) {
+				helena->texture = texRight;
 			}
-			else if (player.facing == 1) {
-				player.texture = texLeft;
+			else if (helena->facing == 1) {
+				helena->texture = texLeft;
 			}
 		}
 
@@ -84,76 +89,76 @@ int main(void) {
 			ToggleFullscreen();
 		} */
 		
-		player.velocity.x = 0;
+		helena->velocity.x = 0;
 		
 		if (IsKeyDown(KEY_D)) {
-			player.velocity.x = PLAYER_HOR_SPEED;
-			if (player.facing == 1 && player.attacking == false) {
-				player.texture = texRight;
+			helena->velocity.x = PLAYER_HOR_SPEED;
+			if (helena->facing == 1 && helena->attacking == false) {
+				helena->texture = texRight;
 			}
-			player.facing = 0;
+			helena->facing = 0;
 		}
 
 		if (IsKeyDown(KEY_A)) {
-			player.velocity.x = -PLAYER_HOR_SPEED;
-			if (player.facing == 0 && player.attacking == false) {
-				player.texture = texLeft;
+			helena->velocity.x = -PLAYER_HOR_SPEED;
+			if (helena->facing == 0 && helena->attacking == false) {
+				helena->texture = texLeft;
 			}
-			player.facing = 1;
+			helena->facing = 1;
 		}
 		
-		if (IsKeyDown(KEY_W) && player.canJump) {
-			player.velocity.y = PLAYER_JUMP_SPEED;
-			player.canJump = false;
+		if (IsKeyDown(KEY_W) && helena->canJump) {
+			helena->velocity.y = PLAYER_JUMP_SPEED;
+			helena->canJump = false;
 		}
 
-		if (IsKeyDown(KEY_SPACE) && player.attacking == false) {
+		if (IsKeyDown(KEY_SPACE) && helena->attacking == false) {
 			a_timer = timer;
-			player.attacking = true;
-			if (player.facing == 0) {
-				player.texture = texAttackRight;
+			helena->attacking = true;
+			if (helena->facing == 0) {
+				helena->texture = texAttackRight;
 			}
-			else if (player.facing == 1) {
-				player.texture = texAttackLeft;
+			else if (helena->facing == 1) {
+				helena->texture = texAttackLeft;
 			}
 		}
 		
-		player.velocity.y += GRAVITY * dt;
+		helena->velocity.y += GRAVITY * dt;
 		
-		player.rect.x += player.velocity.x * dt;
-		player.rect.y += player.velocity.y * dt;
+		helena->rect.x += helena->velocity.x * dt;
+		helena->rect.y += helena->velocity.y * dt;
 		
-		if (CheckCollisionRecs(player.rect, floor)) {
-			player.rect.y = floor.y - player.rect.height;
-			player.velocity.y = 0;
-			player.canJump = true;
+		if (CheckCollisionRecs(helena->rect, floor)) {
+			helena->rect.y = floor.y - helena->rect.height;
+			helena->velocity.y = 0;
+			helena->canJump = true;
 		}
 		
 		
 		
 		for (int i = 0; i < numPlatforms; i++) {
-			if (CheckCollisionRecs(player.rect, platforms[i])) {
-				if (player.velocity.y > 0) {
-					if (player.rect.y + (player.rect.height * 0.8) < platforms[i].y) {
-						player.rect.y = platforms[i].y - player.rect.height;
-						player.velocity.y = 0;
-						player.canJump = true;
+			if (CheckCollisionRecs(helena->rect, platforms[i])) {
+				if (helena->velocity.y > 0) {
+					if (helena->rect.y + (helena->rect.height * 0.8) < platforms[i].y) {
+						helena->rect.y = platforms[i].y - helena->rect.height;
+						helena->velocity.y = 0;
+						helena->canJump = true;
 					}
 				}
 			}
 		}
 		
-		UpdateCameraToFollowPlayer(&camera, (Vector2){player.rect.x, player.rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
+		UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		Rectangle rectsource = {0.0f, 0.0f, (float) player.texture.width, (float) player.texture.height};
-		Rectangle rectdest = player.rect;
+		Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
+		Rectangle rectdest = helena->rect;
 		
 		BeginDrawing();
 		ClearBackground(SKYBLUE);
 		BeginMode2D(camera);
 			
-			//DrawRectangleRec(player.rect, WHITE);
-			DrawTexturePro(player.texture, rectsource, rectdest, (Vector2){0, 0}, 0.0f, WHITE);
+			//DrawRectangleRec(helena->rect, WHITE);
+			DrawTexturePro(helena->texture, rectsource, rectdest, (Vector2){0, 0}, 0.0f, WHITE);
 
 			DrawRectangleRec(floor, GREEN);
 			
