@@ -8,7 +8,7 @@ typedef struct Enemy {
     Rectangle rect;
     Vector2 position;
     Vector2 velocity;
-    bool canJump;
+    Rectangle vision;
     bool attacking;
     bool facing; // 0 para a direita e 1 para a esquerda
     int health;

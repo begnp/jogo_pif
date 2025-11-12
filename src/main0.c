@@ -17,29 +17,38 @@ int main(void) {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Conceito 1: Saltador Quadrado");
 
 
-	Image r0 = LoadImage("./assets/Ellie_f0_right.png");
-	Image r1 = LoadImage("./assets/Ellie_f0_left.png");
+	Image player0 = LoadImage("./assets/Ellie_f0_right.png");
+	Image player1 = LoadImage("./assets/Ellie_f0_left.png");
 	
-	Image r0_a = LoadImage("./assets/Ellie_f_a_right.png");
-	Image r1_a = LoadImage("./assets/Ellie_f_a_left.png");
+	Image player0_a = LoadImage("./assets/Ellie_f_a_right.png");
+	Image player1_a = LoadImage("./assets/Ellie_f_a_left.png");
     
-	Texture2D texRight = LoadTextureFromImage(r0);
-	Texture2D texLeft = LoadTextureFromImage(r1);
-	Texture2D texAttackRight = LoadTextureFromImage(r0_a);
-	Texture2D texAttackLeft = LoadTextureFromImage(r1_a);
+	Texture2D texPlayerRight = LoadTextureFromImage(player0);
+	Texture2D texPlayerLeft = LoadTextureFromImage(player1);
+	Texture2D texPlayerAttackRight = LoadTextureFromImage(player0_a);
+	Texture2D texPlayerAttackLeft = LoadTextureFromImage(player1_a);
 
-	UnloadImage(r0);
-	UnloadImage(r1);
-	UnloadImage(r0_a);
-	UnloadImage(r1_a); 
+	UnloadImage(player0);
+	UnloadImage(player1);
+	UnloadImage(player0_a);
+	UnloadImage(player1_a);
 
 	Player *helena = (Player *) malloc(sizeof(Player));
-	
-	*helena = InitPlayer(helena, texRight);
+	*helena = InitPlayer(helena, texPlayerRight);
+
+
+	Image imgEnemy0 = LoadImage("./assets/snorlax.png");
+
+	Texture2D texEnem0 = LoadTextureFromImage(imgEnemy0);
+
+	UnloadImage(imgEnemy0);
+
+	Enemy *enemy0 = (Enemy *) malloc(sizeof(Enemy));
+	*enemy0 = InitEnemy(enemy0, texEnem0, 0);
 	// Enemy *enemy = ;
 	// InitEnemy();
 
-	// helena->texture = texRight; //textura inicial
+	// helena->texture = texPlayerRight; //textura inicial
 	// helena->position.x = SCREEN_WIDTH / 2.0f;
     // helena->position.y = 375.0f;
     // helena->rect.x = helena->position.x;
@@ -78,10 +87,10 @@ int main(void) {
 		if (helena->attacking == true && (timer > a_timer + 0.5)) {
 			helena->attacking = false;
 			if (helena->facing == 0) {
-				helena->texture = texRight;
+				helena->texture = texPlayerRight;
 			}
 			else if (helena->facing == 1) {
-				helena->texture = texLeft;
+				helena->texture = texPlayerLeft;
 			}
 		}
 
@@ -90,11 +99,12 @@ int main(void) {
 		} */
 		
 		helena->velocity.x = 0;
+		enemy0->velocity.x = 0;
 		
 		if (IsKeyDown(KEY_D)) {
 			helena->velocity.x = PLAYER_HOR_SPEED;
 			if (helena->facing == 1 && helena->attacking == false) {
-				helena->texture = texRight;
+				helena->texture = texPlayerRight;
 			}
 			helena->facing = 0;
 		}
@@ -102,7 +112,7 @@ int main(void) {
 		if (IsKeyDown(KEY_A)) {
 			helena->velocity.x = -PLAYER_HOR_SPEED;
 			if (helena->facing == 0 && helena->attacking == false) {
-				helena->texture = texLeft;
+				helena->texture = texPlayerLeft;
 			}
 			helena->facing = 1;
 		}
@@ -116,10 +126,10 @@ int main(void) {
 			a_timer = timer;
 			helena->attacking = true;
 			if (helena->facing == 0) {
-				helena->texture = texAttackRight;
+				helena->texture = texPlayerAttackRight;
 			}
 			else if (helena->facing == 1) {
-				helena->texture = texAttackLeft;
+				helena->texture = texPlayerAttackLeft;
 			}
 		}
 		
@@ -132,6 +142,16 @@ int main(void) {
 			helena->rect.y = floor.y - helena->rect.height;
 			helena->velocity.y = 0;
 			helena->canJump = true;
+		}
+
+		enemy0->velocity.y += GRAVITY * dt;
+
+		enemy0->rect.x += enemy0->velocity.x * dt;
+		enemy0->rect.y += enemy0->velocity.y * dt;
+
+		if (CheckCollisionRecs(enemy0->rect, floor)) {
+			enemy0->rect.y = floor.y - enemy0->rect.height;
+			enemy0->velocity.y = 0;
 		}
 		
 		
@@ -152,6 +172,9 @@ int main(void) {
 
 		Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
 		Rectangle rectdest = helena->rect;
+
+		Rectangle rectsource_e = {0.0f, 0.0f, (float) enemy0->texture.width, (float) enemy0->texture.height};
+		Rectangle rectdest_e = enemy0->rect;
 		
 		BeginDrawing();
 		ClearBackground(SKYBLUE);
@@ -159,6 +182,10 @@ int main(void) {
 			
 			//DrawRectangleRec(helena->rect, WHITE);
 			DrawTexturePro(helena->texture, rectsource, rectdest, (Vector2){0, 0}, 0.0f, WHITE);
+
+			DrawRectangleRec(enemy0->rect, WHITE);
+
+			DrawTexturePro(enemy0->texture, rectsource_e, rectdest_e, (Vector2){0, 0}, 0.0f, WHITE);
 
 			DrawRectangleRec(floor, GREEN);
 			
@@ -172,10 +199,12 @@ int main(void) {
 	
 	ToggleBorderlessWindowed();
 
-    UnloadTexture(texRight);
-	UnloadTexture(texLeft);
-	UnloadTexture(texAttackRight);
-	UnloadTexture(texAttackLeft);
+    UnloadTexture(texPlayerRight);
+	UnloadTexture(texPlayerLeft);
+	UnloadTexture(texPlayerAttackRight);
+	UnloadTexture(texPlayerAttackLeft);
+
+	UnloadTexture(texEnem0);
 	
 	CloseWindow();
     
