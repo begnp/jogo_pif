@@ -50,8 +50,6 @@ int main(void) {
 
 	Enemy *enemy0 = (Enemy *) malloc(sizeof(Enemy));
 	*enemy0 = InitEnemy(enemy0, texEnem0, 0);
-
-	float a_timer = 0;
 	
 	Rectangle floor = {0, 450, SCREEN_WIDTH, 20};
     
@@ -75,7 +73,7 @@ int main(void) {
 
 		// printf("%f\n\n", timer);
 
-		if (helena->attacking == true && (timer > a_timer + 0.5)) {
+		/* if (helena->attacking == true && (timer >= helena->attackTime + 0.5)) {
 			helena->attacking = false;
 			if (helena->facing == 0) {
 				helena->texture = texPlayerRight;
@@ -83,7 +81,8 @@ int main(void) {
 			else if (helena->facing == 1) {
 				helena->texture = texPlayerLeft;
 			}
-		}
+			lastAttack = timer;
+		} */
 
 		/* if (IsKeyPressed(KEY_F11)) {
 			ToggleFullscreen();
@@ -113,8 +112,8 @@ int main(void) {
 			helena->canJump = false;
 		}
 
-		if (IsKeyDown(KEY_ATTACK) && helena->attacking == false) {
-			a_timer = timer;
+		/* if (IsKeyDown(KEY_ATTACK) && helena->attacking == false) {
+			attackTime = timer;
 			helena->attacking = true;
 			if (helena->facing == 0) {
 				helena->texture = texPlayerAttackRight;
@@ -122,7 +121,7 @@ int main(void) {
 			else if (helena->facing == 1) {
 				helena->texture = texPlayerAttackLeft;
 			}
-		}
+		} */
 		
 		helena->velocity.y += GRAVITY * dt;
 		
@@ -145,8 +144,6 @@ int main(void) {
 			enemy0->velocity.y = 0;
 		}
 		
-		
-		
 		for (int i = 0; i < numPlatforms; i++) {
 			if (CheckCollisionRecs(helena->rect, platforms[i])) {
 				if (helena->velocity.y > 0) {
@@ -159,7 +156,38 @@ int main(void) {
 			}
 		}
 
-		IsplayerAttack(helena, enemy0);
+		if (CanAttack(helena, timer)) {
+			StartPlayerAttack(helena, enemy0);
+			if (helena->facing == 0) {
+				helena->texture = texPlayerAttackRight;
+			}
+			else if (helena->facing == 1) {
+				helena->texture = texPlayerAttackLeft;
+			}
+		}
+
+		if (CanConcludeAttack(helena, timer)) {
+			ConcludePlayerAttack(helena);
+			if (helena->facing == 0) {
+				helena->texture = texPlayerRight;
+			}
+			else if (helena->facing == 1) {
+				helena->texture = texPlayerLeft;
+			}
+		}
+
+
+		/* IsPlayerAttack(helena, enemy0, timer, lastAttack);
+		
+		if (helena->attacking == false) {
+			attackTime = timer;
+			if (helena->facing == 0) {
+				helena->texture = texPlayerAttackRight;
+			}
+			else if (helena->facing == 1) {
+				helena->texture = texPlayerAttackLeft;
+			}
+		} */
 		
 		UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
 

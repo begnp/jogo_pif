@@ -1,6 +1,10 @@
 #include "player.h"
 #include "enemy.h"
 
+#define KEY_ATTACK KEY_SPACE
+#define TIME_ATTACK 0.5
+#define COOLDOWN_ATTACK 0.2
+
 Player InitPlayer(Player *player, Texture2D initTex) {
     player->texture = initTex; //textura inicial
 	player->position.x = 200.0f;
@@ -13,35 +17,65 @@ Player InitPlayer(Player *player, Texture2D initTex) {
     player->velocity = (Vector2){0, 0};
     player->canJump = false;
 	player->attacking = false;
+    player->attackTime = 0;
+    player->lastAttack = 0;
     player->hitbox = (Rectangle) {0, 0, 0, 0};
     player->facing = 0;
 
     return *player;
 }
 
-void IsplayerAttack(Player *player, Enemy *enemy) {
-    if (IsKeyDown(KEY_SPACE)){
-        if (player->facing == 0) {
-            player->hitbox = (Rectangle) {
-                (player->rect.x + player->rect.width),
-                (player->rect.y + (player->rect.height * 0.1)),
-                (player->rect.width * 0.5),
-                (player->rect.height * 0.5)
-            };
-        }
-        else if (player->facing == 1) {
-            player->hitbox = (Rectangle) {
-                (player->rect.x - (player->rect.width * 0.3)),
-                (player->rect.y + (player->rect.height * 0.1)),
-                (player->rect.width * 0.5),
-                (player->rect.height * 0.5)
-            };
-        }
-        if (CheckCollisionRecs(player->hitbox, enemy->rect)) {
-            enemy->health -= 2;
-        }
+bool CanAttack(Player *player, float time) {
+    if (IsKeyDown(KEY_ATTACK) && (time >= player->lastAttack + COOLDOWN_ATTACK) && player->attacking == false) {
+        return true;
     }
     else {
-        player->hitbox = (Rectangle) {player->rect.x, player->rect.y,0, 0};
+        return false;
     }
 }
+
+void StartPlayerAttack(Player *player, Enemy *enemy) {
+    if (player->facing == 0) {
+        player->hitbox = (Rectangle) {
+            (player->rect.x + player->rect.width),
+            (player->rect.y + (player->rect.height * 0.1)),
+            (player->rect.width * 0.6),
+            (player->rect.height * 0.5)
+        };
+    }
+    else if (player->facing == 1) {
+        player->hitbox = (Rectangle) {
+            (player->rect.x - (player->rect.width * 0.3)),
+            (player->rect.y + (player->rect.height * 0.1)),
+            (player->rect.width * 0.6),
+            (player->rect.height * 0.5)
+        };
+    }
+
+    player->attacking = true;
+    player->attackTime = GetTime();
+
+    if (CheckCollisionRecs(player->hitbox, enemy->rect)) {
+        enemy->health -= 20;
+    }
+    /* else if (player->attacking == false) {
+        player->hitbox = (Rectangle) {player->rect.x, player->rect.y,0, 0};
+        return false;
+    } */
+}
+
+bool CanConcludeAttack(Player *player, float time) {
+    if (player->attacking == true && (time >= player->attackTime + TIME_ATTACK)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+void ConcludePlayerAttack(Player *player) {
+    player->hitbox = (Rectangle) {player->rect.x, player->rect.y,0, 0};
+    player->attacking = false;
+    player->lastAttack = GetTime();
+}
+    

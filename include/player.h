@@ -10,6 +10,8 @@ typedef struct Player {
     Vector2 velocity;
     bool canJump;
     bool attacking;
+    float attackTime;
+	float lastAttack;
     Rectangle hitbox;
     bool facing; // 0 para a direita e 1 para a esquerda
     int hearts;
@@ -18,6 +20,12 @@ typedef struct Player {
 
 Player InitPlayer(Player *player, Texture initTex);
 
-void IsplayerAttack(Player *player, Enemy *enemy);
+bool CanAttack(Player *player, float time);
+
+void StartPlayerAttack(Player *player, Enemy *enemy);
+
+bool CanConcludeAttack(Player *player, float time);
+
+void ConcludePlayerAttack(Player *player);
 
 #endif
