@@ -57,11 +57,8 @@ void StartPlayerAttack(Player *player, Enemy *enemy) {
 
     if (CheckCollisionRecs(player->hitbox, enemy->rect)) {
         enemy->health -= 20;
+        IsEnemyAlive(enemy);
     }
-    /* else if (player->attacking == false) {
-        player->hitbox = (Rectangle) {player->rect.x, player->rect.y,0, 0};
-        return false;
-    } */
 }
 
 bool CanConcludeAttack(Player *player, float time) {

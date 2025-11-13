@@ -71,19 +71,6 @@ int main(void) {
 
 		float dt = GetFrameTime();
 
-		// printf("%f\n\n", timer);
-
-		/* if (helena->attacking == true && (timer >= helena->attackTime + 0.5)) {
-			helena->attacking = false;
-			if (helena->facing == 0) {
-				helena->texture = texPlayerRight;
-			}
-			else if (helena->facing == 1) {
-				helena->texture = texPlayerLeft;
-			}
-			lastAttack = timer;
-		} */
-
 		/* if (IsKeyPressed(KEY_F11)) {
 			ToggleFullscreen();
 		} */
@@ -176,18 +163,7 @@ int main(void) {
 			}
 		}
 
-
-		/* IsPlayerAttack(helena, enemy0, timer, lastAttack);
-		
-		if (helena->attacking == false) {
-			attackTime = timer;
-			if (helena->facing == 0) {
-				helena->texture = texPlayerAttackRight;
-			}
-			else if (helena->facing == 1) {
-				helena->texture = texPlayerAttackLeft;
-			}
-		} */
+		EnemyVision(enemy0, helena);
 		
 		UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -201,11 +177,12 @@ int main(void) {
 		ClearBackground(SKYBLUE);
 		BeginMode2D(camera);
 			
+			DrawRectangleRec(enemy0->vision, GRAY);
 			//DrawRectangleRec(helena->rect, WHITE);
 			DrawTexturePro(helena->texture, rectsource, rectdest, (Vector2){0, 0}, 0.0f, WHITE);
 
 			// DrawRectangleRec(enemy0->rect, WHITE);
-			if (enemy0->health >= 1) {
+			if (enemy0->active == true) {
 				DrawTexturePro(enemy0->texture, rectsource_e, rectdest_e, (Vector2){0, 0}, 0.0f, WHITE);
 			}
 			
@@ -231,6 +208,9 @@ int main(void) {
 	UnloadTexture(texPlayerAttackLeft);
 
 	UnloadTexture(texEnem0);
+
+	free(helena);
+	free(enemy0);
 	
 	CloseWindow();
     

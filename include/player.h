@@ -2,7 +2,8 @@
 #define PLAYER_H
 
 #include "raylib.h"
-#include "enemy.h"
+
+typedef struct Enemy Enemy;
 
 typedef struct Player {
     Rectangle rect;
