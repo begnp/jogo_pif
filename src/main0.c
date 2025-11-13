@@ -12,6 +12,11 @@
 #define PLAYER_HOR_SPEED 200.0f
 #define GRAVITY 500.0f
 
+#define KEY_ATTACK KEY_SPACE
+#define KEY_JUMP KEY_W
+#define KEY_RIGHT KEY_D
+#define KEY_LEFT KEY_A
+
 int main(void) {
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Conceito 1: Saltador Quadrado");
@@ -45,20 +50,6 @@ int main(void) {
 
 	Enemy *enemy0 = (Enemy *) malloc(sizeof(Enemy));
 	*enemy0 = InitEnemy(enemy0, texEnem0, 0);
-	// Enemy *enemy = ;
-	// InitEnemy();
-
-	// helena->texture = texPlayerRight; //textura inicial
-	// helena->position.x = SCREEN_WIDTH / 2.0f;
-    // helena->position.y = 375.0f;
-    // helena->rect.x = helena->position.x;
-    // helena->rect.y = helena->position.y;
-    // helena->rect.width = (float) helena->texture.width * 0.2;
-    // helena->rect.height = (float) helena->texture.height * 0.2;
-    // helena->velocity = (Vector2){0, 0};
-    // helena->canJump = false;
-	// helena->attacking = false;
-	// helena->facing = 0;
 
 	float a_timer = 0;
 	
@@ -101,7 +92,7 @@ int main(void) {
 		helena->velocity.x = 0;
 		enemy0->velocity.x = 0;
 		
-		if (IsKeyDown(KEY_D)) {
+		if (IsKeyDown(KEY_RIGHT)) {
 			helena->velocity.x = PLAYER_HOR_SPEED;
 			if (helena->facing == 1 && helena->attacking == false) {
 				helena->texture = texPlayerRight;
@@ -109,7 +100,7 @@ int main(void) {
 			helena->facing = 0;
 		}
 
-		if (IsKeyDown(KEY_A)) {
+		if (IsKeyDown(KEY_LEFT)) {
 			helena->velocity.x = -PLAYER_HOR_SPEED;
 			if (helena->facing == 0 && helena->attacking == false) {
 				helena->texture = texPlayerLeft;
@@ -117,12 +108,12 @@ int main(void) {
 			helena->facing = 1;
 		}
 		
-		if (IsKeyDown(KEY_W) && helena->canJump) {
+		if (IsKeyDown(KEY_JUMP) && helena->canJump) {
 			helena->velocity.y = PLAYER_JUMP_SPEED;
 			helena->canJump = false;
 		}
 
-		if (IsKeyDown(KEY_SPACE) && helena->attacking == false) {
+		if (IsKeyDown(KEY_ATTACK) && helena->attacking == false) {
 			a_timer = timer;
 			helena->attacking = true;
 			if (helena->facing == 0) {
@@ -167,6 +158,8 @@ int main(void) {
 				}
 			}
 		}
+
+		IsplayerAttack(helena, enemy0);
 		
 		UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -183,9 +176,14 @@ int main(void) {
 			//DrawRectangleRec(helena->rect, WHITE);
 			DrawTexturePro(helena->texture, rectsource, rectdest, (Vector2){0, 0}, 0.0f, WHITE);
 
-			DrawRectangleRec(enemy0->rect, WHITE);
-
-			DrawTexturePro(enemy0->texture, rectsource_e, rectdest_e, (Vector2){0, 0}, 0.0f, WHITE);
+			// DrawRectangleRec(enemy0->rect, WHITE);
+			if (enemy0->health >= 1) {
+				DrawTexturePro(enemy0->texture, rectsource_e, rectdest_e, (Vector2){0, 0}, 0.0f, WHITE);
+			}
+			
+			if (helena->attacking == true) {
+				DrawRectangleRec(helena->hitbox, RED);
+			}
 
 			DrawRectangleRec(floor, GREEN);
 			
