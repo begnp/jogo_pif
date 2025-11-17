@@ -24,6 +24,8 @@ Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy) {
         enemy->velocity = (Vector2){0, 0};
         enemy->attacking = false;
         enemy->facing = 0;
+        enemy->delayAttack = 0;
+        enemy->targetInRange = false;
         // enemy->vision = {};
     }
 
@@ -45,13 +47,16 @@ void EnemyVision(Enemy *enemy , Player *player) {
         (50 + enemy->rect.height)
     };
     if (CheckCollisionRecs(enemy->vision, player->rect)) {
-        if ((player->rect.x + (player->rect.width / 2)) > (enemy->rect.x + (enemy->rect.width * 0.55))) {
+        if (enemy->targetInRange == true) {
+            DelayEnemyAttack(enemy, player, GetTime());
+        }
+        else if ((player->rect.x + (player->rect.width / 2)) > (enemy->rect.x + (enemy->rect.width * 0.55))) {
             enemy->facing = 0;
             enemy->velocity.x = ENEMY_HOR_SPEED;
             enemy->rect.x += enemy->velocity.x * dt;
             if ((player->rect.x + (player->rect.width / 2)) < (enemy->rect.x + enemy->rect.width + (enemy->rect.width * 0.5))) {
                 if (CanEnemyAttack(enemy, player, GetTime())) {
-                    StartEnemyAttack(enemy, player);
+                    enemy->targetInRange = true;
                 }
             }
         }
@@ -62,8 +67,9 @@ void EnemyVision(Enemy *enemy , Player *player) {
             if ((player->rect.x + (player->rect.width / 2)) > (enemy->rect.x - (enemy->rect.width * 0.5))) {
                 // rintf("can attack?\n");
                 if (CanEnemyAttack(enemy, player, GetTime())) {
+                    enemy->targetInRange = true;
                     // printf("start attack\n");
-                    StartEnemyAttack(enemy, player);
+                    // StartEnemyAttack(enemy, player);
                 }
             }
         }
@@ -72,10 +78,20 @@ void EnemyVision(Enemy *enemy , Player *player) {
 
 bool CanEnemyAttack(Enemy *enemy, Player *player, float time) {
     if ((time >= enemy->lastAttack + ENEMY_COOLDOWN_ATTACK) && enemy->attacking == false) {
+        if (enemy->delayAttack == 0)
+            enemy->delayAttack = time;
         return true;
     }
     else {
+        enemy->delayAttack = 0;
         return false;
+    }
+}
+
+void DelayEnemyAttack(Enemy *enemy, Player *player, float time) {
+    if (time >= enemy->delayAttack + ENEMY_DELAY_ATTACK) {
+        StartEnemyAttack(enemy, player);
+        enemy->targetInRange = false;
     }
 }
 
@@ -99,6 +115,7 @@ void StartEnemyAttack(Enemy *enemy, Player *player) {
 
     enemy->attacking = true;
     enemy->attackTime = GetTime();
+    enemy->delayAttack = 0;
 
     if (CheckCollisionRecs(enemy->hitbox, player->rect)) {
         player->hearts--;

@@ -12,6 +12,8 @@ typedef struct Enemy {
     Vector2 velocity;
     Rectangle vision;
     bool attacking;
+    bool targetInRange;
+    float delayAttack;
     float attackTime;
 	float lastAttack;
     Rectangle hitbox;
@@ -28,6 +30,8 @@ void IsEnemyAlive(Enemy *enemy);
 void EnemyVision(Enemy *enemy, Player *player);
 
 bool CanEnemyAttack(Enemy *enemy, Player *player, float time);
+
+void DelayEnemyAttack(Enemy *enemy, Player *player, float time);
 
 void StartEnemyAttack(Enemy *enemy, Player *player);
 

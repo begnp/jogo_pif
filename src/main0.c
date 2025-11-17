@@ -224,6 +224,8 @@ int main(void) {
 							WHITE
 						);
 						DrawRectangleRec(enemy0->hitbox, RED);
+						if (enemy0->delayAttack != 0)
+							DrawText("delay", enemy0->rect.x, enemy0->rect.y, 10, RED);
 					}
 
 					if (helena->active == true) {
