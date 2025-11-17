@@ -27,4 +27,12 @@ void IsEnemyAlive(Enemy *enemy);
 
 void EnemyVision(Enemy *enemy, Player *player);
 
+bool CanEnemyAttack(Enemy *enemy, Player *player, float time);
+
+void StartEnemyAttack(Enemy *enemy, Player *player);
+
+bool CanEnemyConcludeAttack(Enemy *enemy, float time);
+
+void ConcludeEnemyAttack(Enemy *enemy);
+
 #endif

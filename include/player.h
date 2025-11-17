@@ -16,10 +16,13 @@ typedef struct Player {
     Rectangle hitbox;
     bool facing; // 0 para a direita e 1 para a esquerda
     int hearts;
+    bool active;
 	Texture texture;
 } Player;
 
 Player InitPlayer(Player *player, Texture initTex);
+
+void IsPlayerAlive(Player *player);
 
 bool CanAttack(Player *player, float time);
 
