@@ -92,7 +92,6 @@ int main(void) {
 
             case GAMEPLAY:
                 helena->velocity.x = 0;
-                enemy0->velocity.x = 0;
                 
                 if (IsKeyDown(KEY_RIGHT)) {
                     helena->velocity.x = PLAYER_HOR_SPEED;
@@ -114,17 +113,6 @@ int main(void) {
                     helena->velocity.y = PLAYER_JUMP_SPEED;
                     helena->canJump = false;
                 }
-
-                /* if (IsKeyDown(KEY_ATTACK) && helena->attacking == false) {
-                    attackTime = timer;
-                    helena->attacking = true;
-                    if (helena->facing == 0) {
-                        helena->texture = texPlayerAttackRight;
-                    }
-                    else if (helena->facing == 1) {
-                        helena->texture = texPlayerAttackLeft;
-                    }
-                } */
                 
                 helena->velocity.y += GRAVITY * dt;
                 
@@ -179,7 +167,17 @@ int main(void) {
                     }
                 }
 
-                EnemyVision(enemy0, helena);
+				enemy0->velocity.x = 0;
+				if (enemy0->active == true) {
+					EnemyVision(enemy0, helena);
+					// if (enemy0->facing == ) {
+					// 	enemy0->texture = ;
+					// }
+				}
+
+				if (CanEnemyConcludeAttack(enemy0, timer)) {
+					ConcludeEnemyAttack(enemy0);
+				}
                 
                 UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -202,26 +200,45 @@ int main(void) {
                 break;
 
             case GAMEPLAY:
+
+				Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
+            	Rectangle rectdest = helena->rect;
+
+                Rectangle rectsource_e = {0.0f, 0.0f, (float) enemy0->texture.width, (float) enemy0->texture.height};
+                Rectangle rectdest_e = enemy0->rect;
+					
                 BeginMode2D(camera);
-                    
-                    Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
-                    Rectangle rectdest = helena->rect;
 
-                    Rectangle rectsource_e = {0.0f, 0.0f, (float) enemy0->texture.width, (float) enemy0->texture.height};
-                    Rectangle rectdest_e = enemy0->rect;
-
-                    DrawRectangleRec(enemy0->vision, GRAY);
                     //DrawRectangleRec(helena->rect, WHITE);
-                    DrawTexturePro(helena->texture, rectsource, rectdest, (Vector2){0, 0}, 0.0f, WHITE);
 
                     // DrawRectangleRec(enemy0->rect, WHITE);
-                    if (enemy0->active == true) {
-                        DrawTexturePro(enemy0->texture, rectsource_e, rectdest_e, (Vector2){0, 0}, 0.0f, WHITE);
-                    }
-                    
-                    if (helena->attacking == true) {
-                        DrawRectangleRec(helena->hitbox, RED);
-                    }
+
+					if (enemy0->active == true) {
+						DrawRectangleRec(enemy0->vision, GRAY);
+						DrawTexturePro(
+							enemy0->texture,
+							rectsource_e,
+							rectdest_e,
+							(Vector2){0, 0},
+							0.0f,
+							WHITE
+						);
+						DrawRectangleRec(enemy0->hitbox, RED);
+					}
+
+					if (helena->active == true) {
+						DrawTexturePro(
+							helena->texture,
+							rectsource, rectdest, 
+							(Vector2){0, 0}, 
+							0.0f, 
+							WHITE
+						);
+
+						if (helena->attacking == true) {
+							DrawRectangleRec(helena->hitbox, BLUE);
+						}
+					}
 
                     DrawRectangleRec(floor, GREEN);
                     
@@ -230,6 +247,11 @@ int main(void) {
                     }
                     
                 EndMode2D();
+
+					char text[8];
+					sprintf(text, "Vida: %d", helena->hearts);
+					DrawText(text, 15, 15, 30, RED);
+
                 default: break;
         }
         
