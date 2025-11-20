@@ -75,6 +75,10 @@ int main(void) {
         /* if (IsKeyPressed(KEY_F11)) {
             ToggleFullscreen();
         } */
+
+        if (currentScreen == EXIT) {
+            break; 
+        }
         
         switch(currentScreen) 
         {
@@ -206,7 +210,7 @@ int main(void) {
                 Rectangle rectdest_e = enemy0->rect;
                 
                 DrawMapBackground(&map);
-                
+
                 BeginMode2D(camera);
 
                     //DrawRectangleRec(helena->rect, WHITE);
