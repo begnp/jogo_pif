@@ -3,16 +3,25 @@
 
 #include "raylib.h"
 
+#define MAP_WIDTH 1000
+#define MAP_HEIGHT 600
+
 typedef struct Map {
-    Rectangle *platforms;
+    Rectangle *platforms; 
     int platformsCount;
-    Color color;         
+
+    Texture2D texBackground;
+    Texture2D texForeground;
+    Texture2D texTile;
+    
+    Color colorFillTop;
+    Color colorFillBot;
+    Color colorBorder;
 } Map;
 
 void InitMap(Map *map);
-
-void DrawMap(Map *map);
-
+void DrawMapBackground(Map *map);
+void DrawMapPlatforms(Map *map);
 void UnloadMap(Map *map);
 
 #endif
