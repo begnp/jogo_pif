@@ -8,16 +8,16 @@ void InitMenu(Menu *menu, int screenWidth, int screenHeight, Texture2D bgTexture
     menu->colorAccent = (Color){ 0, 225, 255, 255 };    
     menu->colorText   = (Color){ 240, 240, 240, 255 }; 
 
-    
     float buttonWidth = 300;
     float buttonHeight = 50;
     float centerX = screenWidth / 2.0f - buttonWidth / 2.0f;
-    float startY = 320;
+    float startY = 280;
     float spacing = 70;
 
     menu->btnPlay        = (Rectangle){ centerX, startY, buttonWidth, buttonHeight };
     menu->btnLeaderboard = (Rectangle){ centerX, startY + spacing, buttonWidth, buttonHeight };
     menu->btnCredits     = (Rectangle){ centerX, startY + spacing * 2, buttonWidth, buttonHeight };
+    menu->btnExit        = (Rectangle){ centerX, startY + spacing * 3, buttonWidth, buttonHeight };
 
     menu->btnBack = (Rectangle){ 50, screenHeight - 80, 150, 40 };
 }
@@ -30,6 +30,7 @@ GameScreen UpdateMenu(Menu *menu, GameScreen currentScreen) {
         if (CheckCollisionPointRec(mousePoint, menu->btnPlay) && clicked) return GAMEPLAY;
         if (CheckCollisionPointRec(mousePoint, menu->btnLeaderboard) && clicked) return LEADERBOARD;
         if (CheckCollisionPointRec(mousePoint, menu->btnCredits) && clicked) return CREDITS;
+        if (CheckCollisionPointRec(mousePoint, menu->btnExit) && clicked) return EXIT;
     }
     else if (currentScreen == LEADERBOARD || currentScreen == CREDITS) {
         if (CheckCollisionPointRec(mousePoint, menu->btnBack) && clicked) return MENU;
@@ -82,11 +83,12 @@ void DrawMenu(Menu *menu, GameScreen currentScreen) {
         const char* title = "Metroid Leveling"; 
         const char* subtitle = "INICIANDO SISTEMA...";
         
+        int screenW = GetScreenWidth();
         int titleW = MeasureText(title, 60);
         int subW = MeasureText(subtitle, 20);
 
         
-        DrawText(title, screenW/2 - titleW/2 + 4, 120 + 4, 60, BLACK);
+        DrawText(title, screenW/2 - titleW/2 + 4, 100 + 4, 60, BLACK);
     
         DrawText(title, screenW/2 - titleW/2, 120, 60, menu->colorAccent);
         
@@ -96,6 +98,7 @@ void DrawMenu(Menu *menu, GameScreen currentScreen) {
         DrawSystemButton(menu, menu->btnPlay, "[ JOGAR ]", mousePoint);
         DrawSystemButton(menu, menu->btnLeaderboard, "[ RANKING ]", mousePoint);
         DrawSystemButton(menu, menu->btnCredits, "[ CREDITOS ]", mousePoint);
+        DrawSystemButton(menu, menu->btnExit, "[ SAIR ]", GetMousePosition());
         
         DrawText("v1.0.0 // PLAYER_ID: #001", 10, screenH - 20, 10, Fade(menu->colorAccent, 0.5f));
     }
