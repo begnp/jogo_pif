@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 void InitMap(Map *map) {
-    map->platformsCount = 5;
+    map->platformsCount = 8 ;
     map->platforms = (Rectangle *) malloc(sizeof(Rectangle) * map->platformsCount);
 
     map->texBackground = LoadTexture("assets/1.png");
@@ -15,11 +15,16 @@ void InitMap(Map *map) {
 
     map->colorBorder = (Color){ 20, 20, 20, 255 };
 
-    map->platforms[0] = (Rectangle){0, 520, 1000, 80};  
-    map->platforms[1] = (Rectangle){300, 400, 100, 20};
-    map->platforms[2] = (Rectangle){100, 300, 200, 20};
-    map->platforms[3] = (Rectangle){450, 250, 150, 20};
-    map->platforms[4] = (Rectangle){650, 150, 100, 20};
+    map->platforms[0] = (Rectangle){-150, 520, 1500, 150};
+    map->platforms[1] = (Rectangle){1450, 620, 350, 20};
+    map->platforms[2] = (Rectangle){1900, 520, 150, 150};
+    map->platforms[3] = (Rectangle){2050, 400, 150, 250}; 
+    map->platforms[4] = (Rectangle){2200, 520, 150 , 40}; 
+    map->platforms[5] = (Rectangle){1450, 420, 90, 20};
+    map->platforms[6] = (Rectangle){1740, 350, 240, 20}; 
+    map->platforms[7] = (Rectangle){2100, 250, 200, 30};   
+
+    
 }
 
 void DrawMapBackground(Map *map) {
