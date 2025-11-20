@@ -183,7 +183,11 @@ int main(void) {
 
 
         BeginDrawing();
-        ClearBackground(SKYBLUE);
+        if (currentScreen == GAMEPLAY) {
+            ClearBackground(BLACK); 
+        } else {
+            ClearBackground(menu.colorBgDark);
+        }
 
         switch(currentScreen) 
         {
@@ -200,12 +204,16 @@ int main(void) {
 
                 Rectangle rectsource_e = {0.0f, 0.0f, (float) enemy0->texture.width, (float) enemy0->texture.height};
                 Rectangle rectdest_e = enemy0->rect;
-                    
+                
+                DrawMapBackground(&map);
+                
                 BeginMode2D(camera);
 
                     //DrawRectangleRec(helena->rect, WHITE);
 
                     // DrawRectangleRec(enemy0->rect, WHITE);
+
+                    DrawMapPlatforms(&map);
 
                     if (enemy0->active == true) {
                         DrawRectangleRec(enemy0->vision, GRAY);
@@ -235,8 +243,6 @@ int main(void) {
                             DrawRectangleRec(helena->hitbox, BLUE);
                         }
                     }
-
-                    DrawMap(&map);
                     
                 EndMode2D();
 
