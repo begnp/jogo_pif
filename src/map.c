@@ -62,6 +62,18 @@ void LoadArea(Map *map, int areaIndex) {
             map->breakableWall = (Rectangle){ 0, 0, 0, 0 };
             break;
 
+        case 3: 
+            map->platformsCount = 3; 
+            map->platforms = (Rectangle *) malloc(sizeof(Rectangle) * map->platformsCount);
+            
+            map->platforms[0] = (Rectangle){ 0, 550, 1000, 50 };
+            
+            map->platforms[1] = (Rectangle){ 0, 0, 40, 600 };
+            map->platforms[2] = (Rectangle){ 960, 0, 40, 600 };
+            
+            map->breakableWall = (Rectangle){ 0, 0, 0, 0 };
+
+
         default:
             printf("Erro: Area %d nao existe!\n", areaIndex);
             break;
@@ -87,7 +99,24 @@ void CheckMapTransition(Map *map, Rectangle *playerRect) {
                 playerRect->y = 500 - playerRect->height;
             }
         }
+
+        if (playerRect->y > 600) { 
+            LoadArea(map, 3); 
+            
+            playerRect->x = 500; 
+            playerRect->y = -50; 
+        }
     }
+
+    else if (map->currentArea == 3) {
+        if (playerRect->y < -50) {
+            LoadArea(map, 2);
+            playerRect->y = 550;
+            playerRect->x = 500;
+        }
+    }
+
+
 }
 
 void InitMap(Map *map) {
