@@ -9,7 +9,8 @@ typedef enum GameScreen {
     GAMEPLAY, 
     LEADERBOARD, 
     CREDITS,
-    EXIT 
+    EXIT,
+    GAMEOVER
 } GameScreen;
 
 typedef struct Menu {

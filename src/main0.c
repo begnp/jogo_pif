@@ -64,6 +64,8 @@ int main(void) {
     
     SetTargetFPS(60);
 
+    Rectangle btnBack = { SCREEN_WIDTH/2 - 100, 400, 200, 50 };
+
     Camera2D camera = InitCamera((Vector2){helena->rect.x, helena->rect.y}, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2});
     
     while(!WindowShouldClose()) {
@@ -87,8 +89,31 @@ int main(void) {
             case CREDITS:
                 currentScreen = UpdateMenu(&menu, currentScreen);
                 break;
+            
+            case GAMEOVER:
+                if (CheckCollisionPointRec(GetMousePosition(), btnBack)) {
+                    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+
+                        helena->hearts = 3; 
+                        helena->active = true;
+                        helena->rect.x = 0; 
+                        helena->rect.y = 520 - helena->rect.height; 
+                        helena->velocity = (Vector2){0,0};
+                        enemy0->active = true;
+                        currentScreen = MENU; 
+                    }
+                }
+                break;
+                
+            
+        
 
             case GAMEPLAY:
+
+                if (helena->hearts <= 0){
+                    currentScreen = GAMEOVER;
+                }
+
                 helena->velocity.x = 0;
                 
                 if (IsKeyDown(KEY_RIGHT)) {
@@ -201,6 +226,25 @@ int main(void) {
                 DrawMenu(&menu, currentScreen);
                 break;
 
+            case GAMEOVER:
+                
+                DrawMapBackground(&map); 
+                DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Fade(BLACK, 0.8f));
+
+                DrawText("FIM DE LINHA", SCREEN_WIDTH/2 - MeasureText("FIM DE LINHA", 40)/2, 200, 40, RED);
+
+                Color btnColor = LIGHTGRAY;
+                if (CheckCollisionPointRec(GetMousePosition(), btnBack)) btnColor = WHITE;
+                
+                DrawRectangleRec(btnBack, btnColor);
+                DrawRectangleLinesEx(btnBack, 2, BLACK);
+                
+                const char* textBtn = "MENU PRINCIPAL";
+                int textW = MeasureText(textBtn, 20);
+                DrawText(textBtn, (int)(btnBack.x + btnBack.width/2 - textW/2), (int)(btnBack.y + 15), 20, BLACK);
+                break;
+            
+            
             case GAMEPLAY:
 
                 Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
@@ -250,7 +294,7 @@ int main(void) {
                     
                 EndMode2D();
 
-                    char text[8];
+                    char text[20];
                     sprintf(text, "Vida: %d", helena->hearts);
                     DrawText(text, 15, 15, 30, RED);
 
