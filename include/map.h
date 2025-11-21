@@ -13,13 +13,20 @@ typedef struct Map {
     Texture2D texBackground;
     Texture2D texForeground;
     Texture2D texTile;
-    
+           
     Color colorFillTop;
     Color colorFillBot;
     Color colorBorder;
+
+    int currentArea;
+
+    Rectangle breakableWall;
+    bool wallActive;
+    int wallHealth;  
 } Map;
 
 void InitMap(Map *map);
+void LoadArea(Map *map, int areaIndex);
 void DrawMapBackground(Map *map);
 void DrawMapPlatforms(Map *map);
 void UnloadMap(Map *map);
