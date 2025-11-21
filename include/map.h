@@ -28,7 +28,9 @@ typedef struct Map {
 void InitMap(Map *map);
 void LoadArea(Map *map, int areaIndex);
 void DrawMapBackground(Map *map);
+void DrawMapForeground(Map *map);
 void DrawMapPlatforms(Map *map);
+void CheckMapTransition(Map *map, Rectangle *playerRect);
 void UnloadMap(Map *map);
 
 #endif
