@@ -10,9 +10,9 @@
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 600
 
-#define PLAYER_JUMP_SPEED -350.0f
+#define PLAYER_JUMP_SPEED -470.0f
 #define PLAYER_HOR_SPEED 200.0f
-#define GRAVITY 500.0f
+#define GRAVITY 800.0f
 
 #define KEY_ATTACK KEY_SPACE
 #define KEY_JUMP KEY_W
@@ -49,7 +49,9 @@ int main(void) {
     Player *helena = (Player *) malloc(sizeof(Player));
     *helena = InitPlayer(helena, texPlayerRight);
 
-
+    helena->rect.x = 100.0f; 
+    helena->rect.y = 400.0f; 
+    
     Image imgEnemy0 = LoadImage("./assets/snorlax.png");
 
     Texture2D texEnem0 = LoadTextureFromImage(imgEnemy0);
@@ -140,6 +142,15 @@ int main(void) {
                 helena->velocity.y += GRAVITY * dt;
                 
                 helena->rect.x += helena->velocity.x * dt;
+
+                CheckMapTransition(&map, &helena->rect);
+
+                if (map.currentArea == 1) {
+                    if (helena->rect.x < 50.0f) {
+                        helena->rect.x = 50.0f;
+                    }
+                }
+                
                 helena->rect.y += helena->velocity.y * dt;
                 
                 if (CheckCollisionRecs(helena->rect, map.platforms[0])) {
@@ -193,23 +204,20 @@ int main(void) {
                 enemy0->velocity.x = 0;
                 if (enemy0->active == true) {
                     EnemyVision(enemy0, helena);
-                    // if (enemy0->facing == ) {
-                    //  enemy0->texture = ;
-                    // }
                 }
 
                 if (CanEnemyConcludeAttack(enemy0, timer)) {
                     ConcludeEnemyAttack(enemy0);
                 }
                 
-                UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+                UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT, MAP_WIDTH, MAP_HEIGHT);
 
                 if (IsKeyPressed(KEY_M)) currentScreen = MENU;
                 
+                break;
+
                 default: break;
         }
-
 
         BeginDrawing();
         if (currentScreen == GAMEPLAY) {
@@ -257,10 +265,6 @@ int main(void) {
 
                 BeginMode2D(camera);
 
-                    //DrawRectangleRec(helena->rect, WHITE);
-
-                    // DrawRectangleRec(enemy0->rect, WHITE);
-
                     DrawMapPlatforms(&map);
 
                     if (enemy0->active == true) {
@@ -291,12 +295,16 @@ int main(void) {
                             DrawRectangleRec(helena->hitbox, BLUE);
                         }
                     }
+
+                    DrawMapForeground(&map);
                     
                 EndMode2D();
 
                     char text[20];
                     sprintf(text, "Vida: %d", helena->hearts);
                     DrawText(text, 15, 15, 30, RED);
+                
+                break;
 
                 default: break;
         }
