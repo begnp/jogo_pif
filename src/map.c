@@ -57,22 +57,79 @@ void LoadArea(Map *map, int areaIndex) {
 
             map->platforms[10] = (Rectangle){ 40, 180, 240, 20 };
 
-            map->platforms[11] = (Rectangle){ 380, 320, 240, 20 };
+            map->platforms[11] = (Rectangle){ 380, 260, 240, 20 };
 
             map->breakableWall = (Rectangle){ 0, 0, 0, 0 };
             break;
 
-        case 3: 
-            map->platformsCount = 3; 
+        case 3:
+            map->platformsCount = 16; 
             map->platforms = (Rectangle *) malloc(sizeof(Rectangle) * map->platformsCount);
+
+            map->platforms[0] = (Rectangle){ 0, 0, 40, 600 }; 
+            map->platforms[1] = (Rectangle){ 960, 0, 40, 600 };  
+            map->platforms[2] = (Rectangle){ 0, -50, 400, 60 };   
+            map->platforms[3] = (Rectangle){ 600, -50, 400, 60 };
+
+            map->platforms[4] = (Rectangle){ 40, 500, 420, 100 };
             
-            map->platforms[0] = (Rectangle){ 0, 550, 1000, 50 };
-            
-            map->platforms[1] = (Rectangle){ 0, 0, 40, 600 };
-            map->platforms[2] = (Rectangle){ 960, 0, 40, 600 };
-            
+            map->platforms[5] = (Rectangle){ 340, 400, 180, 20 };
+
+            map->platforms[6] = (Rectangle){ 40, 320, 180, 20 };
+
+            map->platforms[7] = (Rectangle){ 340, 240, 180, 20 };
+
+            map->platforms[8] = (Rectangle){ 40, 160, 180, 20 };
+
+            map->platforms[9] = (Rectangle){ 320, 100, 420, 20 };
+
+            map->platforms[10] = (Rectangle){ 460, 580, 540, 20 };
+
             map->breakableWall = (Rectangle){ 0, 0, 0, 0 };
 
+            map->platforms[1] = (Rectangle){ 960, -50, 40, 300 };
+
+            map->platforms[10] = (Rectangle){ 960, 370, 40, 230 };
+
+            map->platforms[11] = (Rectangle){ 460, 500, 140, 100 };
+
+            map->platforms[12] = (Rectangle){ 600, 420, 100, 20 };
+
+            map->platforms[13] = (Rectangle){ 700, 340, 100, 20 };
+
+            map->platforms[14] = (Rectangle){ 800, 250, 160, 20 };
+
+            map->platforms[15] = (Rectangle){ 600, 580, 360, 20 };
+
+            map->breakableWall = (Rectangle){ 960, 250, 40, 120 };
+            break;
+        
+        case 4: 
+            map->platformsCount = 11; 
+            map->platforms = (Rectangle *) malloc(sizeof(Rectangle) * map->platformsCount);
+            
+            map->platforms[0] = (Rectangle){ 0, 550, 400, 50 };
+            map->platforms[1] = (Rectangle){ 600, 550, 400, 50 }; 
+            
+            map->platforms[2] = (Rectangle){ 0, 0, 40, 600 };   
+            map->platforms[3] = (Rectangle){ 960, 0, 40, 600 }; 
+
+            map->platforms[4] = (Rectangle){ 0, -50, 1000, 60 };
+
+            map->platforms[5] = (Rectangle){ 300, 420, 400, 20 }; 
+            
+            map->platforms[6] = (Rectangle){ 300, 230, 400, 20 };
+
+            map->platforms[7] = (Rectangle){ 40, 350, 160, 20 };
+
+            map->platforms[8] = (Rectangle){ 40, 150, 120, 20 };
+
+            map->platforms[9] = (Rectangle){ 800, 350, 160, 20 };
+
+            map->platforms[10] = (Rectangle){ 840, 150, 120, 20 };
+
+            map->breakableWall = (Rectangle){ 0, 0, 0, 0 };
+            break;
 
         default:
             printf("Erro: Area %d nao existe!\n", areaIndex);
@@ -81,42 +138,52 @@ void LoadArea(Map *map, int areaIndex) {
 }
 
 void CheckMapTransition(Map *map, Rectangle *playerRect) {
+    
     if (map->currentArea == 1) {
         if (playerRect->x > 980) {
             LoadArea(map, 2);
-            
             playerRect->x = 60;      
-            
             playerRect->y = 550 - playerRect->height;     
         }
     }
 
     else if (map->currentArea == 2) {
+
         if (playerRect->x < 10) {
-            if (playerRect->y > 350) {
+            if (playerRect->y > 350) { 
                 LoadArea(map, 1);
                 playerRect->x = 950; 
-                playerRect->y = 500 - playerRect->height;
+                playerRect->y = 500 - playerRect->height; 
             }
         }
 
-        if (playerRect->y > 600) { 
-            LoadArea(map, 3); 
-            
-            playerRect->x = 500; 
-            playerRect->y = -50; 
+        else if (playerRect->y < -40) {
+            if (playerRect->x > 350 && playerRect->x < 650) {
+                LoadArea(map, 4);
+                playerRect->y = 500;
+            }
+        }
+!
+        else if (playerRect->y > 600) {
+            LoadArea(map, 3);
+            playerRect->y = 0; 
         }
     }
 
     else if (map->currentArea == 3) {
-        if (playerRect->y < -50) {
-            LoadArea(map, 2);
-            playerRect->y = 550;
-            playerRect->x = 500;
+        if (playerRect->y < -40) {
+            if (playerRect->x > 350 && playerRect->x < 650) {
+                LoadArea(map, 2);
+                playerRect->y = 580; 
+            }
         }
     }
-
-
+    else if (map->currentArea == 4) {
+        if (playerRect->y > 600) {
+            LoadArea(map, 2);
+            playerRect->y = -30; 
+        }
+    }
 }
 
 void InitMap(Map *map) {
@@ -189,6 +256,10 @@ void DrawMapPlatforms(Map *map) {
 void DrawMapForeground(Map *map) {
     if (map->currentArea == 1) {
         DrawRectangleGradientH(800, 370, 300, 130, (Color){0,0,0,0}, BLACK);
+    }
+    else if (map->currentArea == 2) {
+        DrawRectangleGradientV(400, -70, 200, 100, BLACK, (Color){0,0,0,0});
+        DrawRectangleGradientV(400, 540, 200, 100, (Color){0,0,0,0}, BLACK);
     }
 }
 
