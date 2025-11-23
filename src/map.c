@@ -163,7 +163,7 @@ void CheckMapTransition(Map *map, Rectangle *playerRect) {
                 playerRect->y = 500;
             }
         }
-!
+
         else if (playerRect->y > 600) {
             LoadArea(map, 3);
             playerRect->y = 0; 
