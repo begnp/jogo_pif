@@ -50,22 +50,26 @@ void EnemyVision(Enemy *enemy , Player *player) {
         if (enemy->targetInRange == true) {
             DelayEnemyAttack(enemy, player, GetTime());
         }
-        else if ((player->rect.x + (player->rect.width / 2)) > (enemy->rect.x + (enemy->rect.width * 0.55))) {
-            enemy->facing = 0;
-            enemy->velocity.x = ENEMY_HOR_SPEED;
-            enemy->rect.x += enemy->velocity.x * dt;
+        else if ((player->rect.x + (player->rect.width / 2)) > (enemy->rect.x + (enemy->rect.width / 2))) {
+            if ((player->rect.x + (player->rect.width / 2)) > (enemy->rect.x + (enemy->rect.width))) {
+                enemy->facing = 0;
+                enemy->velocity.x = ENEMY_HOR_SPEED;
+                enemy->rect.x += enemy->velocity.x * dt;
+            }
             if ((player->rect.x + (player->rect.width / 2)) < (enemy->rect.x + enemy->rect.width + (enemy->rect.width * 0.5))) {
                 if (CanEnemyAttack(enemy, player, GetTime())) {
                     enemy->targetInRange = true;
                 }
             }
         }
-        else if ((player->rect.x + (player->rect.width / 2)) < (enemy->rect.x + (enemy->rect.width * 0.45))) {
-            enemy->facing = 1;
-            enemy->velocity.x = -ENEMY_HOR_SPEED;
-            enemy->rect.x += enemy->velocity.x * dt;
+        else if ((player->rect.x + (player->rect.width / 2)) < (enemy->rect.x + (enemy->rect.width / 2))) {
+            if ((player->rect.x + (player->rect.width / 2)) < enemy->rect.x) {
+                enemy->facing = 1;
+                enemy->velocity.x = -ENEMY_HOR_SPEED;
+                enemy->rect.x += enemy->velocity.x * dt;
+            }
             if ((player->rect.x + (player->rect.width / 2)) > (enemy->rect.x - (enemy->rect.width * 0.5))) {
-                // rintf("can attack?\n");
+                // printf("can attack?\n");
                 if (CanEnemyAttack(enemy, player, GetTime())) {
                     enemy->targetInRange = true;
                     // printf("start attack\n");
@@ -98,9 +102,9 @@ void DelayEnemyAttack(Enemy *enemy, Player *player, float time) {
 void StartEnemyAttack(Enemy *enemy, Player *player) {
     if (enemy->facing == 0) {
         enemy->hitbox = (Rectangle) {
-            (enemy->rect.x + enemy->rect.width),
+            (enemy->rect.x + (enemy->rect.width / 2)),
             (enemy->rect.y + (enemy->rect.height * 0.1)),
-            (enemy->rect.width * 0.3),
+            (enemy->rect.width * 0.8),
             (enemy->rect.height * 0.8)
         };
     }
@@ -108,7 +112,7 @@ void StartEnemyAttack(Enemy *enemy, Player *player) {
         enemy->hitbox = (Rectangle) {
             (enemy->rect.x - (enemy->rect.width * 0.3)),
             (enemy->rect.y + (enemy->rect.height * 0.1)),
-            (enemy->rect.width * 0.3),
+            (enemy->rect.width * 0.8),
             (enemy->rect.height * 0.8)
         };
     }
