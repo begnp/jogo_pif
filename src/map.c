@@ -131,6 +131,46 @@ void LoadArea(Map *map, int areaIndex) {
             map->breakableWall = (Rectangle){ 0, 0, 0, 0 };
             break;
 
+        /* case 6: 
+            map->platformsCount = 13; 
+            map->platforms = (Rectangle *) malloc(sizeof(Rectangle) * map->platformsCount);
+            
+            // Chão
+            map->platforms[0] = (Rectangle){ 0, 550, 1000, 50 };
+            
+            // Paredes
+            map->platforms[1] = (Rectangle){ 0, 0, 40, 600 };   
+            map->platforms[2] = (Rectangle){ 960, 0, 40, 600 }; 
+
+            // Teto
+            map->platforms[3] = (Rectangle){ 0, -50, 1000, 60 };
+
+            // Plataformas
+            // Meio
+            map->platforms[4] = (Rectangle){ 400, 430, 200, 20 }; 
+            
+            map->platforms[5] = (Rectangle){ 400, 310, 200, 20 };
+
+            map->platforms[6] = (Rectangle){ 400, 190, 200, 20 };
+
+            // Esquerda
+            map->platforms[7] = (Rectangle){ 100, 430, 200, 20 }; 
+            
+            map->platforms[8] = (Rectangle){ 100, 310, 200, 20 };
+
+            map->platforms[9] = (Rectangle){ 100, 190, 200, 20 };
+
+            // Direita
+            map->platforms[10] = (Rectangle){ 700, 430, 200, 20 }; 
+            
+            map->platforms[11] = (Rectangle){ 700, 310, 200, 20 };
+
+            map->platforms[12] = (Rectangle){ 700, 190, 200, 20 };
+
+            
+            map->breakableWall = (Rectangle){ 0, 0, 0, 0 };
+            break; */
+
         default:
             printf("Erro: Area %d nao existe!\n", areaIndex);
             break;
@@ -222,6 +262,8 @@ void DrawMapPlatforms(Map *map) {
 
     for (int i = 0; i < map->platformsCount; i++) {
         Rectangle plat = map->platforms[i];
+        // char platText[35];
+        // sprintf(platText, "essa e a platforms[%d]", i);
 
         if (map->texTile.id > 0) {
             if (plat.height > 40) {
@@ -235,8 +277,10 @@ void DrawMapPlatforms(Map *map) {
                         DrawTileRect(map->texTile, dest, source);
                     }
                 }
+                // DrawText(platText, plat.x, plat.y, 15, YELLOW);
                 if (i == 0) {
                     DrawRectangleGradientV((int)plat.x, (int)(plat.y + 30), (int)plat.width, (int)(plat.height - 30), (Color){0,0,0,0}, (Color){0,0,0,150});
+                    // DrawText(platText, plat.x, plat.y, 15, YELLOW);
                 }
             }
             else {
@@ -246,6 +290,7 @@ void DrawMapPlatforms(Map *map) {
                     Rectangle dest = { plat.x + x, plat.y, drawWidth, plat.height };
                     DrawTileRect(map->texTile, dest, source);
                 }
+                // DrawText(platText, plat.x, plat.y, 15, GREEN);
             }
         } else {
             DrawRectangleRec(plat, DARKGRAY);

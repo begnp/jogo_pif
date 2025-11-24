@@ -63,6 +63,8 @@ int main(void) {
     
     Map map;
     InitMap(&map); 
+
+    // bool LoadBoss = false;
     
     SetTargetFPS(60);
 
@@ -111,6 +113,10 @@ int main(void) {
         
 
             case GAMEPLAY:
+
+                /* if (map.currentArea == 6 && LoadBoss == false) {
+                    printf("vamos dar load nisso\n");
+                } */
 
                 if (helena->hearts <= 0){
                     currentScreen = GAMEOVER;
