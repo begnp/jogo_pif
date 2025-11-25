@@ -8,13 +8,13 @@
 #define ENEMY_COOLDOWN_ATTACK 0.4
 #define ENEMY_DELAY_ATTACK 0.5
 
-Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy) {
+Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy, float posX, float posY) {
 
     if (idEnemy == 0) { // Inimigo básico
         enemy->id_enemy = idEnemy;
         enemy->texture = initTex; //textura inicial
-        enemy->position.x = 600.0f;
-        enemy->position.y = 305.0f;
+        enemy->position.x = posX;
+        enemy->position.y = posY;
         enemy->rect.x = enemy->position.x;
         enemy->rect.y = enemy->position.y;
         enemy->rect.width = (float) enemy->texture.width * 0.12;

@@ -23,7 +23,7 @@ typedef struct Enemy {
 	Texture texture;
 } Enemy;
 
-Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy);
+Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy, float posX, float posY);
 
 void IsEnemyAlive(Enemy *enemy);
 
