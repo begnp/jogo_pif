@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "score.h"
 
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 600
@@ -45,6 +46,11 @@ int main(void) {
     UnloadImage(player1);
     UnloadImage(player0_a);
     UnloadImage(player1_a);
+
+    double inicioRun = 0;
+    RunRecord records[5];
+    int qtdRecords = 0;
+    bool rankingCarregado = false;
 
     Player *helena = (Player *) malloc(sizeof(Player));
     *helena = InitPlayer(helena, texPlayerRight);
@@ -91,7 +97,22 @@ int main(void) {
             case MENU:
             case LEADERBOARD:
             case CREDITS:
-                currentScreen = UpdateMenu(&menu, currentScreen);
+                {   
+                GameScreen proximaTela = UpdateMenu(&menu, currentScreen);
+                
+               
+                if (proximaTela == GAMEPLAY) {
+                    inicioRun = GetTime();
+                    
+                    helena->hearts = 3; 
+                    helena->active = true;
+                    helena->rect.x = 100.0f; 
+                    helena->rect.y = 400.0f;
+                }
+                
+                currentScreen = proximaTela;
+            }  
+                
                 break;
             
             case GAMEOVER:
@@ -119,6 +140,10 @@ int main(void) {
                 } */
 
                 if (helena->hearts <= 0){
+                    float tempoSobrevivido = (float)(GetTime() - inicioRun);
+                    SalvarTempoRun(tempoSobrevivido);
+                    
+                    rankingCarregado = false;
                     currentScreen = GAMEOVER;
                 }
 
@@ -235,10 +260,34 @@ int main(void) {
         switch(currentScreen) 
         {
             case MENU:
-            case LEADERBOARD:
             case CREDITS:
                 DrawMenu(&menu, currentScreen);
                 break;
+
+            case LEADERBOARD:
+                DrawMenu(&menu, currentScreen); 
+
+                    if (!rankingCarregado) {
+                        qtdRecords = CarregarTopTempos(records, 5);
+                        rankingCarregado = true;
+                    }
+
+                    if (qtdRecords == 0) {
+                        DrawText("Nenhum registro encontrado.", 350, 250, 20, GRAY);
+                    }
+
+                    for (int i = 0; i < qtdRecords; i++) {
+                        char tempoTexto[20];
+                        FormatarTempo(records[i].tempoSegundos, tempoTexto);
+
+                        char linha[100];
+                        sprintf(linha, "%d. %s .  .  .  .  .  .  .  . %s", i+1, records[i].nome, tempoTexto);
+                        
+                        DrawText(linha, 320, 180 + (i * 40), 20, menu.colorText);
+                    }
+                    
+
+                    break;
 
             case GAMEOVER:
                 

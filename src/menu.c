@@ -106,8 +106,6 @@ void DrawMenu(Menu *menu, GameScreen currentScreen) {
         DrawText("[ RANKING DE CAÇADORES ]", 350, 100, 30, menu->colorAccent);
         DrawRectangleLines(300, 150, 680, 300, Fade(menu->colorAccent, 0.3f));
         
-        DrawText("1. JIN-WOO  -  00:45s", 320, 170, 20, menu->colorText);
-        DrawText("2. HELENA   -  01:12s", 320, 200, 20, WHITE);
         
         DrawSystemButton(menu, menu->btnBack, "< VOLTAR", mousePoint);
     }
