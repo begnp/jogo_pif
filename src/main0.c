@@ -20,6 +20,11 @@
 #define KEY_RIGHT KEY_D
 #define KEY_LEFT KEY_A
 
+#define AMOUNT_ENEMY_AREA_1 2
+#define AMOUNT_ENEMY_AREA_2 4
+#define AMOUNT_ENEMY_AREA_3 2
+#define AMOUNT_ENEMY_AREA_4 2
+
 int main(void) {
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Metroid Leveling - Demo");
@@ -67,13 +72,13 @@ int main(void) {
     // Enemy *enemy0 = (Enemy *) malloc(sizeof(Enemy));
     // *enemy0 = InitEnemy(enemy0, texEnem0, 0);
 
-    Enemy **enemyList = (Enemy **) malloc(2 * sizeof(Enemy*));
+    Enemy **enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_1 * sizeof(Enemy*));
 
     float enemyX = 500, enemyY = 305;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
         *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemyX, enemyY);
-        enemyX -= 100;
+        enemyX += 200;
     }
     
     Map map;
@@ -133,7 +138,7 @@ int main(void) {
                         helena->rect.x = 0; 
                         helena->rect.y = 520 - helena->rect.height; 
                         helena->velocity = (Vector2){0,0};
-                        for (int i = 0; i < 2; i++) {
+                        for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
                             enemyList[i]->active = true;
                         }
                         // enemy0->active = true;
@@ -202,7 +207,7 @@ int main(void) {
                     helena->canJump = true;
                 }
 
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
                     enemyList[i]->velocity.y += GRAVITY * dt;
 
                     enemyList[i]->rect.x += enemyList[i]->velocity.x * dt;
@@ -236,7 +241,7 @@ int main(void) {
                 }
 
                 if (CanAttack(helena, timer)) {
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
                         StartPlayerAttack(helena, enemyList[i]);
                     }
                     // StartPlayerAttack(helena, enemy0);
@@ -258,7 +263,7 @@ int main(void) {
                     }
                 }
 
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
                     enemyList[i]->velocity.x = 0;
                     if (enemyList[i]->active == true) {
                         EnemyVision(enemyList[i], helena);
@@ -350,7 +355,7 @@ int main(void) {
                 Rectangle rectdest = helena->rect;
 
                 Rectangle rectsource_e[2], rectdest_e[2];
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
                     rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->texture.width, (float) enemyList[i]->texture.height};
                     rectdest_e[i] = enemyList[i]->rect;
                 }
@@ -363,7 +368,7 @@ int main(void) {
 
                     DrawMapPlatforms(&map);
 
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
                         if (enemyList[i]->active == true) {
                             DrawRectangleRec(enemyList[i]->vision, GRAY);
                             DrawTexturePro(
@@ -439,10 +444,10 @@ int main(void) {
 
     free(helena);
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
         free(enemyList[i]);
     }
-    // free(enemyList);
+    free(enemyList);
     // free(enemy0);
     
     CloseWindow();
