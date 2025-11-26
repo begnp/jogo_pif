@@ -1,3 +1,9 @@
 DEV 67.67
 
 Player 6.95
+Player 5.81
+Player 6.37
+Player 46.27
+Player 9.36
+Player 27.56
+Player 28.53

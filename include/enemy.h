@@ -21,6 +21,12 @@ typedef struct Enemy {
     int health;
     bool active;
 	Texture currentTexture;
+    Texture2D runTextures[4];
+    Texture2D attackTextures[3];
+    int currentFrame;
+    float frameTimer;
+    float frameSpeed;
+    Texture2D idleTexture;
 } Enemy;
 
 Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy, float posX, float posY);

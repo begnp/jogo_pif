@@ -98,6 +98,7 @@ int main(void) {
     UnloadImage(player_jump1);
     UnloadImage(player_jump2);
 
+
     double inicioRun = 0;
     ScoreNode *listaScores = NULL;
     bool rankingCarregado = false;
@@ -107,7 +108,6 @@ int main(void) {
 
     helena->idleTexture = texPlayerIdle;
 
-    helena->attackTexture = texPlayerIdle;
     helena->runTextures[0] = texPlayerRun0;
     helena->runTextures[1] = texPlayerRun1;
     helena->runTextures[2] = texPlayerRun2;
@@ -129,6 +129,33 @@ int main(void) {
     helena->rect.y = 400.0f; 
 
     bool rectChangeToAttack = false;
+
+    Image enemy_idle = LoadImage("./assets/enemy/idle.png");
+    Image enemy_run0 = LoadImage("./assets/enemy/run2.png");
+    Image enemy_run1 = LoadImage("./assets/enemy/run3.png");
+    Image enemy_run2 = LoadImage("./assets/enemy/run2.png");
+    Image enemy_run3 = LoadImage("./assets/enemy/run3.png");
+    Image enemy_attack0 = LoadImage("./assets/enemy/attack0.png");
+    Image enemy_attack1 = LoadImage("./assets/enemy/attack1.png");
+    Image enemy_attack2 = LoadImage("./assets/enemy/attack2.png");
+
+    Texture2D texEnemyIdle = LoadTextureFromImage(enemy_idle);
+    Texture2D texEnemyRun0 = LoadTextureFromImage(enemy_run0);
+    Texture2D texEnemyRun1 = LoadTextureFromImage(enemy_run1);
+    Texture2D texEnemyRun2 = LoadTextureFromImage(enemy_run2);
+    Texture2D texEnemyRun3 = LoadTextureFromImage(enemy_run3);
+    Texture2D texEnemyAttack0 = LoadTextureFromImage(enemy_attack0);
+    Texture2D texEnemyAttack1 = LoadTextureFromImage(enemy_attack1);
+    Texture2D texEnemyAttack2 = LoadTextureFromImage(enemy_attack2);
+
+    UnloadImage(enemy_idle);
+    UnloadImage(enemy_run0);
+    UnloadImage(enemy_run1);
+    UnloadImage(enemy_run2);
+    UnloadImage(enemy_run3);
+    UnloadImage(enemy_attack0);
+    UnloadImage(enemy_attack1);
+    UnloadImage(enemy_attack2);
     
     Image imgEnemy0 = LoadImage("./assets/snorlax.png");
 
@@ -358,32 +385,92 @@ int main(void) {
                     enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_1 * sizeof(Enemy*));
                     for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
                         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[0][i].x, enemiesManager[0][i].y);
+                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnemyIdle, 0, enemiesManager[0][i].x, enemiesManager[0][i].y);
                         *enemiesStarted = AMOUNT_ENEMY_AREA_1;
+
+                        enemyList[i]->idleTexture = texEnemyIdle;
+
+                        enemyList[i]->runTextures[0] = texEnemyRun0;
+                        enemyList[i]->runTextures[1] = texEnemyRun1;
+                        enemyList[i]->runTextures[2] = texEnemyRun2;
+                        enemyList[i]->runTextures[3] = texEnemyRun3;
+
+                        enemyList[i]->attackTextures[0] = texEnemyAttack0;
+                        enemyList[i]->attackTextures[1] = texEnemyAttack1;
+                        enemyList[i]->attackTextures[2] = texEnemyAttack2;
+
+                        enemyList[i]->frameSpeed = 0.3f;
+                        enemyList[i]->frameTimer = 0.0f;
+                        enemyList[i]->currentFrame = 0;
                     }
                 }
                 else if (map.currentArea == 2 && *enemiesStarted == 0) {
                     enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_2 * sizeof(Enemy*));
                     for (int i = 0; i < AMOUNT_ENEMY_AREA_2; i++) {
                         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[1][i].x, enemiesManager[1][i].y);
+                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnemyIdle, 0, enemiesManager[1][i].x, enemiesManager[1][i].y);
                         *enemiesStarted = AMOUNT_ENEMY_AREA_2;
+
+                        enemyList[i]->idleTexture = texEnemyIdle;
+
+                        enemyList[i]->runTextures[0] = texEnemyRun0;
+                        enemyList[i]->runTextures[1] = texEnemyRun1;
+                        enemyList[i]->runTextures[2] = texEnemyRun2;
+                        enemyList[i]->runTextures[3] = texEnemyRun3;
+
+                        enemyList[i]->attackTextures[0] = texEnemyAttack0;
+                        enemyList[i]->attackTextures[1] = texEnemyAttack1;
+                        enemyList[i]->attackTextures[2] = texEnemyAttack2;
+
+                        enemyList[i]->frameSpeed = 0.3f;
+                        enemyList[i]->frameTimer = 0.0f;
+                        enemyList[i]->currentFrame = 0;
                     }
                 }
                 else if (map.currentArea == 4 && *enemiesStarted == 0) {
                     enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_4 * sizeof(Enemy*));
                     for (int i = 0; i < AMOUNT_ENEMY_AREA_4; i++) {
                         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[3][i].x, enemiesManager[3][i].y);
+                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnemyIdle, 0, enemiesManager[3][i].x, enemiesManager[3][i].y);
                         *enemiesStarted = AMOUNT_ENEMY_AREA_4;
+
+                        enemyList[i]->idleTexture = texEnemyIdle;
+
+                        enemyList[i]->runTextures[0] = texEnemyRun0;
+                        enemyList[i]->runTextures[1] = texEnemyRun1;
+                        enemyList[i]->runTextures[2] = texEnemyRun2;
+                        enemyList[i]->runTextures[3] = texEnemyRun3;
+
+                        enemyList[i]->attackTextures[0] = texEnemyAttack0;
+                        enemyList[i]->attackTextures[1] = texEnemyAttack1;
+                        enemyList[i]->attackTextures[2] = texEnemyAttack2;
+
+                        enemyList[i]->frameSpeed = 0.3f;
+                        enemyList[i]->frameTimer = 0.0f;
+                        enemyList[i]->currentFrame = 0;
                     }
                 }
                 else if (map.currentArea == 6 && *enemiesStarted == 0) {
                     enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_6 * sizeof(Enemy*));
                     for (int i = 0; i < AMOUNT_ENEMY_AREA_6; i++) {
                         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[5][i].x, enemiesManager[5][i].y);
+                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnemyIdle, 0, enemiesManager[5][i].x, enemiesManager[5][i].y);
                         *enemiesStarted = AMOUNT_ENEMY_AREA_6;
+
+                        enemyList[i]->idleTexture = texEnemyIdle;
+
+                        enemyList[i]->runTextures[0] = texEnemyRun0;
+                        enemyList[i]->runTextures[1] = texEnemyRun1;
+                        enemyList[i]->runTextures[2] = texEnemyRun2;
+                        enemyList[i]->runTextures[3] = texEnemyRun3;
+
+                        enemyList[i]->attackTextures[0] = texEnemyAttack0;
+                        enemyList[i]->attackTextures[1] = texEnemyAttack1;
+                        enemyList[i]->attackTextures[2] = texEnemyAttack2;
+
+                        enemyList[i]->frameSpeed = 0.3f;
+                        enemyList[i]->frameTimer = 0.0f;
+                        enemyList[i]->currentFrame = 0;
                     }
                 }
 
@@ -411,6 +498,7 @@ int main(void) {
                     isMoving = true;
                 }
 
+                // Animações da Helena
                 if (helena->attacking) {
                     helena->frameTimer += dt;
                     
@@ -429,15 +517,12 @@ int main(void) {
                 }
                 else if (helena->velocity.y > 200) {
                     helena->currentTexture = helena->jumpTextures[2];
-                    printf("2\n");
                 }
                 else if (helena->velocity.y >= -200 && helena->velocity.y <= 200 && helena->velocity.y != 0) {
                     helena->currentTexture = helena->jumpTextures[1];
-                    printf("1\n");
                 }
                 else if (helena->velocity.y < -200) {
                     helena->currentTexture = helena->jumpTextures[0];
-                    printf("0\n");
                 }
                 else if (isMoving && !helena->attacking && helena->canJump) {
                     helena->frameTimer += dt;
@@ -456,6 +541,40 @@ int main(void) {
                 else {
                     helena->currentTexture = helena->idleTexture; 
                     helena->currentFrame = 0;
+                }
+
+                // Animações do inimigo
+                for (int i = 0; i < *enemiesStarted; i++) {
+                    if (enemyList[i]->attacking) {
+                        enemyList[i]->frameTimer += dt;
+                    
+                        float attackFrameSpeed = 0.15f; 
+
+                        if (enemyList[i]->frameTimer >= attackFrameSpeed) {
+                            enemyList[i]->frameTimer = 0.0f;
+                            enemyList[i]->currentFrame++;
+                            
+                            if (enemyList[i]->currentFrame > 2) {
+                                enemyList[i]->currentFrame = 0; 
+                            }
+                            
+                            enemyList[i]->currentTexture = enemyList[i]->attackTextures[enemyList[i]->currentFrame];
+                        }
+                    }
+                    else if (enemyList[i]->velocity.x != 0 && !enemyList[i]->attacking) {
+                        enemyList[i]->frameTimer += dt;
+
+                        if (enemyList[i]->frameTimer >= enemyList[i]->frameSpeed) {
+                            enemyList[i]->frameTimer = 0.0f;
+                            enemyList[i]->currentFrame++;
+                            
+                            if (enemyList[i]->currentFrame > 3) {
+                                enemyList[i]->currentFrame = 0; 
+                            }
+                            
+                            enemyList[i]->currentTexture = enemyList[i]->runTextures[enemyList[i]->currentFrame];
+                        }
+                    }
                 }
                 
                 if (IsKeyDown(KEY_JUMP) && helena->canJump) {
@@ -784,6 +903,9 @@ int main(void) {
                 Rectangle rectdest_e[9]; // *enemiesStarted
                 for (int i = 0; i < *enemiesStarted; i++) {
                     rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->currentTexture.width, (float) enemyList[i]->currentTexture.height};
+                    if (enemyList[i]->facing == 1) {
+                        rectsource_e[i].width = -rectsource_e[i].width;
+                    }
                     rectdest_e[i] = enemyList[i]->rect;
                 }
                 
@@ -866,6 +988,15 @@ int main(void) {
     UnloadTexture(texPlayerJump0);
     UnloadTexture(texPlayerJump1);
     UnloadTexture(texPlayerJump2);
+
+    UnloadTexture(texEnemyIdle);
+    UnloadTexture(texEnemyRun0);
+    UnloadTexture(texEnemyRun1);
+    UnloadTexture(texEnemyRun2);
+    UnloadTexture(texEnemyRun3);
+    UnloadTexture(texEnemyAttack0);
+    UnloadTexture(texEnemyAttack1);
+    UnloadTexture(texEnemyAttack2);
 
     UnloadTexture(texEnem0);
     UnloadTexture(menuBg);

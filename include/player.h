@@ -26,7 +26,6 @@ typedef struct Player {
     float frameTimer;
     float frameSpeed;
     Texture2D idleTexture;
-    Texture2D attackTexture;
 } Player;
 
 Player InitPlayer(Player *player, Texture initTex);
