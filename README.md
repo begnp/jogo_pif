@@ -6,11 +6,13 @@ Você assume o papel de Helena uma mulher de 21 anos que quando ainda era recém
 quando portais surgiram e abriram nos céus trazendo monstros com eles. Helena agora quer investigar os portais e você acompanhará o começo de sua jornada.
 
 ![Intro](assets\IntroParte1.png)
+
 *Imagem gerada com IA*
 
 ## Você consegue sair vivo do portal mesmo Helena não tendo poderes?
 
 ![Intro](assets\IntroParte5.png)
+
 *Imagem gerada com IA*
 
 ### Metroid Leveling foi desenvolvido em **C** utilizando a biblioteca gráfica **Raylib**
@@ -43,11 +45,12 @@ A tela de menu oferece as seguintes opções:
   - **BARRA DE ESPAÇO** — Atacar
   - **ENTER** — (Para pular a intro do jogo)
 
+---
+
 ## 🗺️ Estrutura do Mapa e Progressão
 
 **Metroid Leveling** Possui 1 mapa com **6 áreas interconectadas**, desafiando o jogador com inimigos e elementos de plataforma.
 
----
 
 ### 🌀 Área 1 – Início do portal
 
@@ -80,15 +83,19 @@ A tela de menu oferece as seguintes opções:
 
 ---
 
+###  Área 5 – Sala do boss
+
+- Nessa área, o jogador encontrará o **Boss** e algumas **plataformas**.
+- Essa parte é **totalmente diferente** da caverna inteira.
+
+---
+
 ###  Área Secreta – Parte escondida da Caverna
 
 - Nessa área, o jogador encontrará um **item** que aumentará seu **dano**.
 - Onde está? Bom se **atente aos detalhes** e talvez descubra.
 
-###  Área 5 – Sala do boss
-
-- Nessa área, o jogador encontrará o **Boss** e algumas **plataformas**.
-- Essa parte é **totalmente diferente** da caverna inteira.
+---
 
 ### 👺 Desafio  – Derrotar o boss
 
@@ -100,8 +107,17 @@ A tela de menu oferece as seguintes opções:
 
 **Explore e lute pela sua sobrevivência. A vida e o destino de Helena está em suas mãos, pronto para encarar Metroid Leveling?**
 
+---
+
+## Vídeo Demonstrativo
+
+---
+
 ## 📊 Slides de apresentação do jogo
 
+Confira os slides do nosso jogo:
+
+[Slides no canva](https://www.canva.com/design/DAG2kd-Ty2M/TDONgpOxUASnOd0O4GUaKQ/edit?utm_content=DAG2kd-Ty2M&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## 👥 Equipe de Desenvolvimento
 
