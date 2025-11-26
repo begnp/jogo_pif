@@ -19,7 +19,8 @@ typedef struct Player {
     int hearts;
     bool active;
     Texture currentTexture;
-    Texture2D runTextures[4];   
+    Texture2D runTextures[4];
+    Texture2D attackTextures[3]; 
     int currentFrame;
     float frameTimer;
     float frameSpeed;

@@ -2,7 +2,7 @@
 #include "enemy.h"
 
 #define KEY_ATTACK KEY_SPACE
-#define TIME_ATTACK 0.5
+#define TIME_ATTACK 0.36
 #define COOLDOWN_ATTACK 0.2
 
 Player InitPlayer(Player *player, Texture2D initTex) {
@@ -52,7 +52,7 @@ void StartPlayerAttack(Player *player, Enemy *enemy, Map *map) {
     }
     else if (player->facing == 1) {
         player->hitbox = (Rectangle) {
-            (player->rect.x - (player->rect.width * 1)),
+            (player->rect.x - (player->rect.width * 0.55)),
             (player->rect.y + (player->rect.height * 0.1)),
             (player->rect.width * 1),
             (player->rect.height * 0.8)

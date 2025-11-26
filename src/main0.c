@@ -62,53 +62,75 @@ int main(void) {
     
     GameScreen currentScreen = INTRO; 
 
-    Image player0 = LoadImage("./assets/Ellie_f0_right.png");
-    Image player1 = LoadImage("./assets/Ellie_f0_left.png");
-    
-    Image player0_a = LoadImage("./assets/Ellie_f_a_right.png");
-    Image player1_a = LoadImage("./assets/Ellie_f_a_left.png");
-    
-    Texture2D texPlayerRight = LoadTextureFromImage(player0);
-    Texture2D texPlayerLeft = LoadTextureFromImage(player1);
-    Texture2D texPlayerAttackRight = LoadTextureFromImage(player0_a);
-    Texture2D texPlayerAttackLeft = LoadTextureFromImage(player1_a);
+    // Helena's textures
+    Image player_idle = LoadImage("./assets/helena/idle.png");
+    Image player_run0 = LoadImage("./assets/helena/run0.png");
+    Image player_run1 = LoadImage("./assets/helena/run1.png");
+    Image player_run2 = LoadImage("./assets/helena/run2.png");
+    Image player_run3 = LoadImage("./assets/helena/run3.png");
+    Image player_attack0 = LoadImage("./assets/helena/attack0.png");
+    Image player_attack1 = LoadImage("./assets/helena/attack1.png");
+    Image player_attack2 = LoadImage("./assets/helena/attack2.png");
 
-    UnloadImage(player0);
-    UnloadImage(player1);
-    UnloadImage(player0_a);
-    UnloadImage(player1_a);
+    Texture2D texPlayerIdle = LoadTextureFromImage(player_idle);
+    Texture2D texPlayerRun0 = LoadTextureFromImage(player_run0);
+    Texture2D texPlayerRun1 = LoadTextureFromImage(player_run1);
+    Texture2D texPlayerRun2 = LoadTextureFromImage(player_run2);
+    Texture2D texPlayerRun3 = LoadTextureFromImage(player_run3);
+    Texture2D texPlayerAttack0 = LoadTextureFromImage(player_attack0);
+    Texture2D texPlayerAttack1 = LoadTextureFromImage(player_attack1);
+    Texture2D texPlayerAttack2 = LoadTextureFromImage(player_attack2);
 
-    Image player0_r0 = LoadImage("assets/Ellie_f_r0_right.png");
-    Image player0_r1 = LoadImage("assets/Ellie_f_r1_right.png");
-    Image player0_r2 = LoadImage("assets/Ellie_f_r2_right.png");
+    UnloadImage(player_idle);
+    UnloadImage(player_run0);
+    UnloadImage(player_run1);
+    UnloadImage(player_run2);
+    UnloadImage(player_run3);
+    UnloadImage(player_attack0);
+    UnloadImage(player_attack1);
+    UnloadImage(player_attack2);
 
-    Texture2D texPlayerRunRight_0 = LoadTextureFromImage(player0_r0);
-    Texture2D texPlayerRunRight_1 = LoadTextureFromImage(player0_r1);
-    Texture2D texPlayerRunRight_2 = LoadTextureFromImage(player0_r2);
 
-    UnloadImage(player0_r0);
-    UnloadImage(player0_r1);
-    UnloadImage(player0_r2);
+
+    // Image player_a0 = LoadImage("assets/Ellie_f_a0_right.png");
+    // Image player_a1 = LoadImage("assets/Ellie_f_a1_right.png");
+    // Image player_a2 = LoadImage("assets/Ellie_f_a2_right.png");
+
+    // Texture2D texAttack0 = LoadTextureFromImage(player_a0);
+    // Texture2D texAttack1 = LoadTextureFromImage(player_a1);
+    // Texture2D texAttack2 = LoadTextureFromImage(player_a2);
+
+    // UnloadImage(player_a0);
+    // UnloadImage(player_a1);
+    // UnloadImage(player_a2);
 
     double inicioRun = 0;
     ScoreNode *listaScores = NULL;
     bool rankingCarregado = false;
 
     Player *helena = (Player *) malloc(sizeof(Player));
-    *helena = InitPlayer(helena, texPlayerRight);
+    *helena = InitPlayer(helena, texPlayerIdle);
 
-    helena->idleTexture = texPlayerRight;
-    helena->attackTexture = texPlayerAttackRight;
-    helena->runTextures[0] = texPlayerRunRight_0;
-    helena->runTextures[1] = texPlayerRunRight_1;
-    helena->runTextures[2] = texPlayerRunRight_2;
-    helena->runTextures[3] = texPlayerRunRight_1;
-    helena->frameSpeed = 0.25f;
+    helena->idleTexture = texPlayerIdle;
+
+    helena->attackTexture = texPlayerIdle;
+    helena->runTextures[0] = texPlayerRun0;
+    helena->runTextures[1] = texPlayerRun1;
+    helena->runTextures[2] = texPlayerRun2;
+    helena->runTextures[3] = texPlayerRun3;
+
+    helena->attackTextures[0] = texPlayerAttack0;
+    helena->attackTextures[1] = texPlayerAttack1;
+    helena->attackTextures[2] = texPlayerAttack2;
+
+    helena->frameSpeed = 0.15f;
     helena->frameTimer = 0.0f;
     helena->currentFrame = 0;
 
     helena->rect.x = 100.0f; 
     helena->rect.y = 400.0f; 
+
+    bool rectChangeToAttack = false;
     
     Image imgEnemy0 = LoadImage("./assets/snorlax.png");
 
@@ -389,7 +411,27 @@ int main(void) {
                     isMoving = true;
                 }
 
-                if (isMoving && !helena->attacking && helena->canJump) {
+                if (helena->attacking) {
+                    helena->frameTimer += dt;
+                    
+                    // A velocidade do ataque geralmente é mais rápida
+                    // TIME_ATTACK é 0.5s, temos 3 frames. 0.5 / 3 ~= 0.16s por frame.
+                    float attackFrameSpeed = 0.12f; 
+
+                    if (helena->frameTimer >= attackFrameSpeed) {
+                        helena->frameTimer = 0.0f;
+                        helena->currentFrame++;
+                        
+                        // Se passar do último frame, mantemos no último ou fazemos loop?
+                        // Geralmente ataque toca uma vez (Play Once).
+                        if (helena->currentFrame > 2) {
+                            helena->currentFrame = 0; // Loopa para garantir que não crashe
+                        }
+                        
+                        helena->currentTexture = helena->attackTextures[helena->currentFrame];
+                    }
+                }
+                else if (isMoving && !helena->attacking && helena->canJump) {
                     helena->frameTimer += dt;
                     
                     if (helena->frameTimer >= helena->frameSpeed) {
@@ -403,7 +445,7 @@ int main(void) {
                         helena->currentTexture = helena->runTextures[helena->currentFrame];
                     }
                 } 
-                else if (!helena->attacking) {
+                else {
                     helena->currentTexture = helena->idleTexture; 
                     helena->currentFrame = 0;
                 }
@@ -476,11 +518,12 @@ int main(void) {
                 }
 
                 if (CanAttack(helena, timer)) {
-
                     for (int i = 0; i < *enemiesStarted; i++) {
                         StartPlayerAttack(helena, enemyList[i], &map);
                     }
-                    helena->currentTexture = helena->attackTexture;
+                    helena->currentFrame = 0;
+                    helena->frameTimer = 0.0f;
+                    helena->currentTexture = helena->attackTextures[0];
                 }
 
                 if (CanConcludeAttack(helena, timer)) {
@@ -698,6 +741,17 @@ int main(void) {
                 if (helena->facing == 1) {
                     rectsource.width = -rectsource.width;
                 }
+                if (helena->attacking && !rectChangeToAttack) {
+                    helena->rect.width = (float) helena->currentTexture.width * 0.2;
+                    helena->rect.height = (float) helena->currentTexture.height * 0.2;
+                    rectChangeToAttack = true;
+                }
+                else if (!helena->attacking && rectChangeToAttack) {
+                    helena->rect.y = helena->rect.y + 5;
+                    helena->rect.width = (float) helena->currentTexture.width * 0.2;
+                    helena->rect.height = (float) helena->currentTexture.height * 0.2;
+                    rectChangeToAttack = false;
+                }
                 Rectangle rectdest = helena->rect;
                 
                 Rectangle rectsource_e[9]; // *enemiesStarted
@@ -775,10 +829,14 @@ int main(void) {
     UnloadMusicStream(musicGame);
     CloseAudioDevice();
 
-    UnloadTexture(texPlayerRight);
-    UnloadTexture(texPlayerLeft);
-    UnloadTexture(texPlayerAttackRight);
-    UnloadTexture(texPlayerAttackLeft);
+    UnloadTexture(texPlayerIdle);
+    UnloadTexture(texPlayerRun0);
+    UnloadTexture(texPlayerRun1);
+    UnloadTexture(texPlayerRun2);
+    UnloadTexture(texPlayerRun3);
+    UnloadTexture(texPlayerAttack0);
+    UnloadTexture(texPlayerAttack1);
+    UnloadTexture(texPlayerAttack2);
 
     UnloadTexture(texEnem0);
     UnloadTexture(menuBg);
