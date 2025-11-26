@@ -20,11 +20,6 @@
 #define KEY_RIGHT KEY_D
 #define KEY_LEFT KEY_A
 
-#define AMOUNT_ENEMY_AREA_1 2
-#define AMOUNT_ENEMY_AREA_2 4
-#define AMOUNT_ENEMY_AREA_3 2
-#define AMOUNT_ENEMY_AREA_4 2
-
 int main(void) {
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Metroid Leveling - Demo");
@@ -69,17 +64,8 @@ int main(void) {
 
     UnloadImage(imgEnemy0);
 
-    // Enemy *enemy0 = (Enemy *) malloc(sizeof(Enemy));
-    // *enemy0 = InitEnemy(enemy0, texEnem0, 0);
-
-    Enemy **enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_1 * sizeof(Enemy*));
-
-    float enemyX = 500, enemyY = 305;
-    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-        enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemyX, enemyY);
-        enemyX += 200;
-    }
+    Enemy *enemy0 = (Enemy *) malloc(sizeof(Enemy));
+    *enemy0 = InitEnemy(enemy0, texEnem0, 0);
     
     Map map;
     InitMap(&map); 
@@ -138,10 +124,7 @@ int main(void) {
                         helena->rect.x = 0; 
                         helena->rect.y = 520 - helena->rect.height; 
                         helena->velocity = (Vector2){0,0};
-                        for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-                            enemyList[i]->active = true;
-                        }
-                        // enemy0->active = true;
+                        enemy0->active = true;
                         currentScreen = MENU; 
                     }
                 }
@@ -191,6 +174,16 @@ int main(void) {
                 
                 helena->rect.x += helena->velocity.x * dt;
 
+                if (map.wallActive) {
+                    if (CheckCollisionRecs(helena->rect, map.breakableWall)) {
+                        if (helena->velocity.x > 0) {
+                            helena->rect.x = map.breakableWall.x - helena->rect.width;
+                        } else if (helena->velocity.x < 0) {
+                            helena->rect.x = map.breakableWall.x + map.breakableWall.width;
+                        }
+                    }
+                }
+
                 CheckMapTransition(&map, &helena->rect);
 
                 if (map.currentArea == 1) {
@@ -207,26 +200,15 @@ int main(void) {
                     helena->canJump = true;
                 }
 
-                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-                    enemyList[i]->velocity.y += GRAVITY * dt;
+                enemy0->velocity.y += GRAVITY * dt;
 
-                    enemyList[i]->rect.x += enemyList[i]->velocity.x * dt;
-                    enemyList[i]->rect.y += enemyList[i]->velocity.y * dt;
+                enemy0->rect.x += enemy0->velocity.x * dt;
+                enemy0->rect.y += enemy0->velocity.y * dt;
 
-                    if (CheckCollisionRecs(enemyList[i]->rect, map.platforms[0])) {
-                        enemyList[i]->rect.y = map.platforms[0].y - enemyList[i]->rect.height;
-                        enemyList[i]->velocity.y = 0;
-                    }
+                if (CheckCollisionRecs(enemy0->rect, map.platforms[0])) {
+                    enemy0->rect.y = map.platforms[0].y - enemy0->rect.height;
+                    enemy0->velocity.y = 0;
                 }
-                // enemy0->velocity.y += GRAVITY * dt;
-
-                // enemy0->rect.x += enemy0->velocity.x * dt;
-                // enemy0->rect.y += enemy0->velocity.y * dt;
-
-                // if (CheckCollisionRecs(enemy0->rect, map.platforms[0])) {
-                //     enemy0->rect.y = map.platforms[0].y - enemy0->rect.height;
-                //     enemy0->velocity.y = 0;
-                // }
                 
                 for (int i = 1; i < map.platformsCount; i++) {
                     if (CheckCollisionRecs(helena->rect, map.platforms[i])) {
@@ -241,10 +223,8 @@ int main(void) {
                 }
 
                 if (CanAttack(helena, timer)) {
-                    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-                        StartPlayerAttack(helena, enemyList[i]);
-                    }
-                    // StartPlayerAttack(helena, enemy0);
+                    StartPlayerAttack(helena, enemy0, &map);
+                    
                     if (helena->facing == 0) {
                         helena->texture = texPlayerAttackRight;
                     }
@@ -263,24 +243,14 @@ int main(void) {
                     }
                 }
 
-                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-                    enemyList[i]->velocity.x = 0;
-                    if (enemyList[i]->active == true) {
-                        EnemyVision(enemyList[i], helena);
-                    }
-
-                    if (CanEnemyConcludeAttack(enemyList[i], timer)) {
-                        ConcludeEnemyAttack(enemyList[i]);
-                    }
+                enemy0->velocity.x = 0;
+                if (enemy0->active == true) {
+                    EnemyVision(enemy0, helena);
                 }
-                // enemy0->velocity.x = 0;
-                // if (enemy0->active == true) {
-                //     EnemyVision(enemy0, helena);
-                // }
 
-                // if (CanEnemyConcludeAttack(enemy0, timer)) {
-                //     ConcludeEnemyAttack(enemy0);
-                // }
+                if (CanEnemyConcludeAttack(enemy0, timer)) {
+                    ConcludeEnemyAttack(enemy0);
+                }
                 
                 UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT, MAP_WIDTH, MAP_HEIGHT);
 
@@ -354,13 +324,8 @@ int main(void) {
                 Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
                 Rectangle rectdest = helena->rect;
 
-                Rectangle rectsource_e[2], rectdest_e[2];
-                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-                    rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->texture.width, (float) enemyList[i]->texture.height};
-                    rectdest_e[i] = enemyList[i]->rect;
-                }
-                // Rectangle rectsource_e = {0.0f, 0.0f, (float) enemy0->texture.width, (float) enemy0->texture.height};
-                // Rectangle rectdest_e = enemy0->rect;
+                Rectangle rectsource_e = {0.0f, 0.0f, (float) enemy0->texture.width, (float) enemy0->texture.height};
+                Rectangle rectdest_e = enemy0->rect;
                 
                 DrawMapBackground(&map);
 
@@ -368,36 +333,20 @@ int main(void) {
 
                     DrawMapPlatforms(&map);
 
-                    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-                        if (enemyList[i]->active == true) {
-                            DrawRectangleRec(enemyList[i]->vision, GRAY);
-                            DrawTexturePro(
-                                enemyList[i]->texture,
-                                rectsource_e[i],
-                                rectdest_e[i],
-                                (Vector2){0, 0},
-                                0.0f,
-                                WHITE
-                            );
-                            DrawRectangleRec(enemyList[i]->hitbox, RED);
-                            if (enemyList[i]->delayAttack != 0)
-                                DrawText("delay", enemyList[i]->rect.x, enemyList[i]->rect.y, 10, RED);
-                        }
+                    if (enemy0->active == true) {
+                        DrawRectangleRec(enemy0->vision, GRAY);
+                        DrawTexturePro(
+                            enemy0->texture,
+                            rectsource_e,
+                            rectdest_e,
+                            (Vector2){0, 0},
+                            0.0f,
+                            WHITE
+                        );
+                        DrawRectangleRec(enemy0->hitbox, RED);
+                        if (enemy0->delayAttack != 0)
+                            DrawText("delay", enemy0->rect.x, enemy0->rect.y, 10, RED);
                     }
-                    // if (enemy0->active == true) {
-                    //     DrawRectangleRec(enemy0->vision, GRAY);
-                    //     DrawTexturePro(
-                    //         enemy0->texture,
-                    //         rectsource_e,
-                    //         rectdest_e,
-                    //         (Vector2){0, 0},
-                    //         0.0f,
-                    //         WHITE
-                    //     );
-                    //     DrawRectangleRec(enemy0->hitbox, RED);
-                    //     if (enemy0->delayAttack != 0)
-                    //         DrawText("delay", enemy0->rect.x, enemy0->rect.y, 10, RED);
-                    // }
 
                     if (helena->active == true) {
                         DrawTexturePro(
@@ -443,12 +392,7 @@ int main(void) {
     UnloadMap(&map);
 
     free(helena);
-
-    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-        free(enemyList[i]);
-    }
-    free(enemyList);
-    // free(enemy0);
+    free(enemy0);
     
     CloseWindow();
     

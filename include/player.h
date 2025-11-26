@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "raylib.h"
+#include "map.h"
 
 typedef struct Enemy Enemy;
 
@@ -12,12 +13,12 @@ typedef struct Player {
     bool canJump;
     bool attacking;
     float attackTime;
-	float lastAttack;
+    float lastAttack;
     Rectangle hitbox;
     bool facing; // 0 para a direita e 1 para a esquerda
     int hearts;
     bool active;
-	Texture texture;
+    Texture texture;
 } Player;
 
 Player InitPlayer(Player *player, Texture initTex);
@@ -26,7 +27,7 @@ void IsPlayerAlive(Player *player);
 
 bool CanAttack(Player *player, float time);
 
-void StartPlayerAttack(Player *player, Enemy *enemy);
+void StartPlayerAttack(Player *player, Enemy *enemy, Map *map);
 
 bool CanConcludeAttack(Player *player, float time);
 
