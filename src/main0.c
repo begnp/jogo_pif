@@ -78,12 +78,34 @@ int main(void) {
     UnloadImage(player0_a);
     UnloadImage(player1_a);
 
+    Image player0_r0 = LoadImage("assets/Ellie_f_r0_right.png");
+    Image player0_r1 = LoadImage("assets/Ellie_f_r1_right.png");
+    Image player0_r2 = LoadImage("assets/Ellie_f_r2_right.png");
+
+    Texture2D texPlayerRunRight_0 = LoadTextureFromImage(player0_r0);
+    Texture2D texPlayerRunRight_1 = LoadTextureFromImage(player0_r1);
+    Texture2D texPlayerRunRight_2 = LoadTextureFromImage(player0_r2);
+
+    UnloadImage(player0_r0);
+    UnloadImage(player0_r1);
+    UnloadImage(player0_r2);
+
     double inicioRun = 0;
     ScoreNode *listaScores = NULL;
     bool rankingCarregado = false;
 
     Player *helena = (Player *) malloc(sizeof(Player));
     *helena = InitPlayer(helena, texPlayerRight);
+
+    helena->idleTexture = texPlayerRight;
+    helena->attackTexture = texPlayerAttackRight;
+    helena->runTextures[0] = texPlayerRunRight_0;
+    helena->runTextures[1] = texPlayerRunRight_1;
+    helena->runTextures[2] = texPlayerRunRight_2;
+    helena->runTextures[3] = texPlayerRunRight_1;
+    helena->frameSpeed = 0.25f;
+    helena->frameTimer = 0.0f;
+    helena->currentFrame = 0;
 
     helena->rect.x = 100.0f; 
     helena->rect.y = 400.0f; 
@@ -352,21 +374,38 @@ int main(void) {
                 }
 
                 helena->velocity.x = 0;
+
+                bool isMoving = false;
                 
                 if (IsKeyDown(KEY_RIGHT)) {
                     helena->velocity.x = PLAYER_HOR_SPEED;
-                    if (helena->facing == 1 && helena->attacking == false) {
-                        helena->texture = texPlayerRight;
-                    }
                     helena->facing = 0;
+                    isMoving = true;
                 }
 
                 if (IsKeyDown(KEY_LEFT)) {
                     helena->velocity.x = -PLAYER_HOR_SPEED;
-                    if (helena->facing == 0 && helena->attacking == false) {
-                        helena->texture = texPlayerLeft;
-                    }
                     helena->facing = 1;
+                    isMoving = true;
+                }
+
+                if (isMoving && !helena->attacking && helena->canJump) {
+                    helena->frameTimer += dt;
+                    
+                    if (helena->frameTimer >= helena->frameSpeed) {
+                        helena->frameTimer = 0.0f;
+                        helena->currentFrame++;
+                        
+                        if (helena->currentFrame > 3) {
+                            helena->currentFrame = 0;
+                        }
+                        
+                        helena->currentTexture = helena->runTextures[helena->currentFrame];
+                    }
+                } 
+                else if (!helena->attacking) {
+                    helena->currentTexture = helena->idleTexture; 
+                    helena->currentFrame = 0;
                 }
                 
                 if (IsKeyDown(KEY_JUMP) && helena->canJump) {
@@ -441,23 +480,12 @@ int main(void) {
                     for (int i = 0; i < *enemiesStarted; i++) {
                         StartPlayerAttack(helena, enemyList[i], &map);
                     }
-                    
-                    if (helena->facing == 0) {
-                        helena->texture = texPlayerAttackRight;
-                    }
-                    else if (helena->facing == 1) {
-                        helena->texture = texPlayerAttackLeft;
-                    }
+                    helena->currentTexture = helena->attackTexture;
                 }
 
                 if (CanConcludeAttack(helena, timer)) {
                     ConcludePlayerAttack(helena);
-                    if (helena->facing == 0) {
-                        helena->texture = texPlayerRight;
-                    }
-                    else if (helena->facing == 1) {
-                        helena->texture = texPlayerLeft;
-                    }
+                    helena->currentTexture = helena->idleTexture;
                 }
 
                 for (int i = 0; i < *enemiesStarted; i++) {
@@ -665,13 +693,17 @@ int main(void) {
             
             case GAMEPLAY:
 
-                Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
+                Rectangle rectsource = {0.0f, 0.0f, (float) helena->currentTexture.width, (float) helena->currentTexture.height};
+                // Para virar a texture para o lado esquerdo
+                if (helena->facing == 1) {
+                    rectsource.width = -rectsource.width;
+                }
                 Rectangle rectdest = helena->rect;
                 
                 Rectangle rectsource_e[9]; // *enemiesStarted
                 Rectangle rectdest_e[9]; // *enemiesStarted
                 for (int i = 0; i < *enemiesStarted; i++) {
-                    rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->texture.width, (float) enemyList[i]->texture.height};
+                    rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->currentTexture.width, (float) enemyList[i]->currentTexture.height};
                     rectdest_e[i] = enemyList[i]->rect;
                 }
                 
@@ -686,7 +718,7 @@ int main(void) {
                         if (enemyList[i]->active == true) {
                             DrawRectangleRec(enemyList[i]->vision, GRAY);
                             DrawTexturePro(
-                                enemyList[i]->texture,
+                                enemyList[i]->currentTexture,
                                 rectsource_e[i],
                                 rectdest_e[i],
                                 (Vector2){0, 0},
@@ -701,8 +733,9 @@ int main(void) {
 
                     if (helena->active == true) {
                         DrawTexturePro(
-                            helena->texture,
-                            rectsource, rectdest, 
+                            helena->currentTexture,
+                            rectsource,
+                            rectdest, 
                             (Vector2){0, 0}, 
                             0.0f, 
                             WHITE

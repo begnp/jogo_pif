@@ -18,7 +18,13 @@ typedef struct Player {
     bool facing; // 0 para a direita e 1 para a esquerda
     int hearts;
     bool active;
-    Texture texture;
+    Texture currentTexture;
+    Texture2D runTextures[4];   
+    int currentFrame;
+    float frameTimer;
+    float frameSpeed;
+    Texture2D idleTexture;
+    Texture2D attackTexture;
 } Player;
 
 Player InitPlayer(Player *player, Texture initTex);

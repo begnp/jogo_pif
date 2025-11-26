@@ -20,7 +20,7 @@ typedef struct Enemy {
     bool facing; // 0 para a direita e 1 para a esquerda
     int health;
     bool active;
-	Texture texture;
+	Texture currentTexture;
 } Enemy;
 
 Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy, float posX, float posY);
