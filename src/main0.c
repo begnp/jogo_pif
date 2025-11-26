@@ -196,7 +196,7 @@ int main(void) {
 
     int *enemiesStarted = (int *) malloc(sizeof(int));
     *enemiesStarted = 0;
-    Enemy **enemyList;
+    Enemy **enemyList = NULL;
     
     SetTargetFPS(60);
 
@@ -787,10 +787,17 @@ int main(void) {
 
     free(helena);
 
-    for (int i = 0; i < AMOUNT_ENEMY_AREA_2; i++) {
-        free(enemyList[i]);
+    if (enemyList != NULL) {
+        for (int i = 0; i < *enemiesStarted; i++) {
+            free(enemyList[i]);
+        }
+        free(enemyList);
     }
-    free(enemyList);
+
+    for (int i = 0; i < AMOUNT_AREAS; i++) {
+        free(enemiesManager[i]);
+    }
+    free(enemiesManager);
 
     free(enemiesStarted);
     
