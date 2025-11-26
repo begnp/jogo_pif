@@ -3,14 +3,21 @@
 
 #include <stdio.h>
 
-typedef struct {
+
+typedef struct ScoreNode {
     char nome[20];
-    float tempoSegundos;
-} RunRecord;
+    float tempo;
+    struct ScoreNode *next; 
+} ScoreNode;
+
 
 void SalvarTempoRun(float segundos);
 
-int CarregarTopTempos(RunRecord *records, int max);
+
+ScoreNode* CarregarListaScores();
+
+void LiberarLista(ScoreNode *head);
+
 
 void FormatarTempo(float segundos, char *buffer);
 

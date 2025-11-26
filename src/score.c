@@ -4,46 +4,73 @@
 
 #define ARQUIVO_SCORE "leaderboard.txt"
 
+ScoreNode* CriarNo(char* nome, float tempo) {
+    ScoreNode* novo = (ScoreNode*) malloc(sizeof(ScoreNode));
+    if (novo) {
+        strcpy(novo->nome, nome);
+        novo->tempo = tempo;
+        novo->next = NULL;
+    }
+    return novo;
+}
+
+ScoreNode* InserirOrdenado(ScoreNode* head, ScoreNode* novo) {
+    if (head == NULL || novo->tempo > head->tempo) {
+        novo->next = head;
+        return novo; 
+    }
+
+
+    ScoreNode* atual = head;
+    while (atual->next != NULL && atual->next->tempo >= novo->tempo) {
+        atual = atual->next;
+    }
+
+    novo->next = atual->next;
+    atual->next = novo;
+
+    return head; 
+}
+
 void SalvarTempoRun(float segundos) {
     FILE *file = fopen(ARQUIVO_SCORE, "a");
-    if (file == NULL) {
+    if (file == NULL){
         return;
-    }
+    } 
+
     fprintf(file, "Player %.2f\n", segundos);
-    
     fclose(file);
 }
 
-int CarregarTopTempos(RunRecord *records, int max) {
+ScoreNode* CarregarListaScores() {
     FILE *file = fopen(ARQUIVO_SCORE, "r");
-    if (file == NULL) return 0;
+    if (file == NULL){
+        return NULL;
+    } 
 
-    int count = 0;
-    
-    RunRecord buffer[100]; 
-    int totalLido = 0;
+    ScoreNode *head = NULL;
+    char nomeTemp[20];
+    float tempoTemp;
 
-    while (totalLido < 100 && fscanf(file, "%s %f", buffer[totalLido].nome, &buffer[totalLido].tempoSegundos) == 2) {
-        totalLido++;
-    }
-    fclose(file);
-
-    for (int i = 0; i < totalLido - 1; i++) {
-        for (int j = 0; j < totalLido - i - 1; j++) {
-            if (buffer[j].tempoSegundos < buffer[j+1].tempoSegundos) {
-                RunRecord temp = buffer[j];
-                buffer[j] = buffer[j+1];
-                buffer[j+1] = temp;
-            }
+    while (fscanf(file, "%s %f", nomeTemp, &tempoTemp) == 2) {
+        ScoreNode* novoNo = CriarNo(nomeTemp, tempoTemp);
+        
+        if (novoNo) {
+            head = InserirOrdenado(head, novoNo);
         }
     }
+    
+    fclose(file);
+    return head; 
+}
 
-    int limite = (totalLido > max) ? max : totalLido;
-    for (int i = 0; i < limite; i++) {
-        records[i] = buffer[i];
+void LiberarLista(ScoreNode *head) {
+    ScoreNode *atual = head;
+    while (atual != NULL) {
+        ScoreNode *temp = atual;
+        atual = atual->next; 
+        free(temp);          
     }
-
-    return limite;
 }
 
 void FormatarTempo(float segundos, char *buffer) {

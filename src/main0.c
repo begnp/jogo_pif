@@ -79,8 +79,7 @@ int main(void) {
     UnloadImage(player1_a);
 
     double inicioRun = 0;
-    RunRecord records[5];
-    int qtdRecords = 0;
+    ScoreNode *listaScores = NULL;
     bool rankingCarregado = false;
 
     Player *helena = (Player *) malloc(sizeof(Player));
@@ -265,6 +264,12 @@ int main(void) {
                         helena->rect.x = 100.0f; 
                         helena->rect.y = 400.0f;
                     }
+
+                    if (currentScreen == LEADERBOARD && proximaTela != LEADERBOARD) {
+                    LiberarLista(listaScores);
+                    listaScores = NULL;
+                    rankingCarregado = false;
+                }
                 
                     currentScreen = proximaTela;
                 }  
@@ -608,23 +613,33 @@ int main(void) {
                 DrawMenu(&menu, currentScreen); 
 
                     if (!rankingCarregado) {
-                        qtdRecords = CarregarTopTempos(records, 5);
-                        rankingCarregado = true;
-                    }
 
-                    if (qtdRecords == 0) {
-                        DrawText("Nenhum registro encontrado.", 350, 250, 20, GRAY);
-                    }
+                    if (listaScores != NULL) LiberarLista(listaScores);
+                    
+                    listaScores = CarregarListaScores();
+                    rankingCarregado = true;
+                }
 
-                    for (int i = 0; i < qtdRecords; i++) {
+
+                if (listaScores == NULL) {
+                    DrawText("Nenhum registro encontrado.", 350, 250, 20, GRAY);
+                } else {
+                    ScoreNode *aux = listaScores;
+                    int i = 0;
+
+                    while (aux != NULL && i < 5) {
                         char tempoTexto[20];
-                        FormatarTempo(records[i].tempoSegundos, tempoTexto);
+                        FormatarTempo(aux->tempo, tempoTexto);
 
                         char linha[100];
-                        sprintf(linha, "%d. %s .  .  .  .  .  .  .  . %s", i+1, records[i].nome, tempoTexto);
-                        
+                        sprintf(linha, "%d. %s .  .  .  .  .  .  .  . %s", i+1, aux->nome, tempoTexto);
+                         
                         DrawText(linha, 320, 180 + (i * 40), 20, menu.colorText);
+
+                        aux = aux->next;
+                        i++;
                     }
+                }
                     
 
                     break;
