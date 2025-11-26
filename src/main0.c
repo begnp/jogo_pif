@@ -679,6 +679,7 @@ int main(void) {
             case GAMEPLAY:
 
                 Rectangle rectsource = {0.0f, 0.0f, (float) helena->currentTexture.width, (float) helena->currentTexture.height};
+                // Para virar a texture para o lado esquerdo
                 if (helena->facing == 1) {
                     rectsource.width = -rectsource.width;
                 }
