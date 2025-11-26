@@ -41,9 +41,9 @@ void IsEnemyAlive(Enemy *enemy) {
 void EnemyVision(Enemy *enemy , Player *player) {
     float dt = GetFrameTime();
     enemy->vision = (Rectangle) {
-        (enemy->rect.x - (enemy->rect.width * 2)),
+        (enemy->rect.x - (enemy->rect.width * 3)),
         (enemy->rect.y - 50),
-        (enemy->rect.width * 5),
+        (enemy->rect.width * 7),
         (50 + enemy->rect.height)
     };
     if (CheckCollisionRecs(enemy->vision, player->rect)) {

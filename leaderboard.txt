@@ -6,3 +6,7 @@ Player 5.61
 Player 15.24
 Player 18.81
 Player 43.73
+Player 76.86
+Player 16.57
+Player 31.33
+Player 32.80

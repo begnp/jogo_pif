@@ -108,39 +108,39 @@ int main(void) {
     
     // Area 1
     enemiesManager[0][0].x = 500;
-    enemiesManager[0][0].y = 305;
+    enemiesManager[0][0].y = 500;
 
     enemiesManager[0][1].x = 700;
-    enemiesManager[0][1].y = 305;
+    enemiesManager[0][1].y = 500;
 
     // Area 2
     enemiesManager[1][0].x = 100;
-    enemiesManager[1][0].y = 305;
+    enemiesManager[1][0].y = 320;
 
-    enemiesManager[1][1].x = 700;
-    enemiesManager[1][1].y = 305;
+    enemiesManager[1][1].x = 420;
+    enemiesManager[1][1].y = 260;
 
-    enemiesManager[1][2].x = 100;
-    enemiesManager[1][2].y = 105;
+    enemiesManager[1][2].x = 420;
+    enemiesManager[1][2].y = 110;
 
-    enemiesManager[1][3].x = 700;
-    enemiesManager[1][3].y = 105;
+    enemiesManager[1][3].x = 820;
+    enemiesManager[1][3].y = 210;
 
     // Area 3
 
 
     // Area 4
     enemiesManager[3][0].x = 100;
-    enemiesManager[3][0].y = 305;
+    enemiesManager[3][0].y = 350;
 
-    enemiesManager[3][1].x = 700;
-    enemiesManager[3][1].y = 305;
+    enemiesManager[3][1].x = 420;
+    enemiesManager[3][1].y = 420;
 
-    enemiesManager[3][2].x = 100;
-    enemiesManager[3][2].y = 105;
+    enemiesManager[3][2].x = 420;
+    enemiesManager[3][2].y = 230;
 
-    enemiesManager[3][3].x = 700;
-    enemiesManager[3][3].y = 105;
+    enemiesManager[3][3].x = 750;
+    enemiesManager[3][3].y = 550;
 
     // Area 5
 
@@ -319,6 +319,14 @@ int main(void) {
                         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
                         *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[1][i].x, enemiesManager[1][i].y);
                         *enemiesStarted = AMOUNT_ENEMY_AREA_2;
+                    }
+                }
+                else if (map.currentArea == 4 && *enemiesStarted == 0) {
+                    enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_4 * sizeof(Enemy*));
+                    for (int i = 0; i < AMOUNT_ENEMY_AREA_4; i++) {
+                        enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
+                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[3][i].x, enemiesManager[3][i].y);
+                        *enemiesStarted = AMOUNT_ENEMY_AREA_4;
                     }
                 }
                 else if (map.currentArea == 6 && *enemiesStarted == 0) {
