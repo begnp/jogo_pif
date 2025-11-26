@@ -30,7 +30,7 @@ void LoadArea(Map *map, int areaIndex);
 void DrawMapBackground(Map *map);
 void DrawMapForeground(Map *map);
 void DrawMapPlatforms(Map *map);
-void CheckMapTransition(Map *map, Rectangle *playerRect);
+void CheckMapTransition(Map *map, Rectangle *playerRect, int *enemiesStarted);
 void UnloadMap(Map *map);
 
 #endif
