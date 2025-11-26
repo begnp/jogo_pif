@@ -99,6 +99,7 @@ int main(void) {
     *helena = InitPlayer(helena, texPlayerRight);
 
     helena->idleTexture = texPlayerRight;
+    helena->attackTexture = texPlayerAttackRight;
     helena->runTextures[0] = texPlayerRunRight_0;
     helena->runTextures[1] = texPlayerRunRight_1;
     helena->runTextures[2] = texPlayerRunRight_2;
@@ -373,23 +374,17 @@ int main(void) {
                 
                 if (IsKeyDown(KEY_RIGHT)) {
                     helena->velocity.x = PLAYER_HOR_SPEED;
-                    // if (helena->facing == 1 && helena->attacking == false) {
-                    //     helena->texture = texPlayerRight;
-                    // }
                     helena->facing = 0;
                     isMoving = true;
                 }
 
                 if (IsKeyDown(KEY_LEFT)) {
                     helena->velocity.x = -PLAYER_HOR_SPEED;
-                    // if (helena->facing == 0 && helena->attacking == false) {
-                    //     helena->texture = texPlayerLeft;
-                    // }
                     helena->facing = 1;
                     isMoving = true;
                 }
 
-                if (isMoving && !helena->attacking && helena->canJump) { // Só anima se estiver no chão e não atacando
+                if (isMoving && !helena->attacking && helena->canJump) {
                     helena->frameTimer += dt;
                     
                     if (helena->frameTimer >= helena->frameSpeed) {
@@ -400,11 +395,11 @@ int main(void) {
                             helena->currentFrame = 0;
                         }
                         
-                        helena->texture = helena->runTextures[helena->currentFrame];
+                        helena->currentTexture = helena->runTextures[helena->currentFrame];
                     }
                 } 
                 else if (!helena->attacking) {
-                    helena->texture = helena->idleTexture; 
+                    helena->currentTexture = helena->idleTexture; 
                     helena->currentFrame = 0;
                 }
                 
@@ -480,23 +475,12 @@ int main(void) {
                     for (int i = 0; i < *enemiesStarted; i++) {
                         StartPlayerAttack(helena, enemyList[i], &map);
                     }
-                    
-                    if (helena->facing == 0) {
-                        helena->texture = texPlayerAttackRight;
-                    }
-                    else if (helena->facing == 1) {
-                        helena->texture = texPlayerAttackLeft;
-                    }
+                    helena->currentTexture = helena->attackTexture;
                 }
 
                 if (CanConcludeAttack(helena, timer)) {
                     ConcludePlayerAttack(helena);
-                    if (helena->facing == 0) {
-                        helena->texture = texPlayerRight;
-                    }
-                    else if (helena->facing == 1) {
-                        helena->texture = texPlayerLeft;
-                    }
+                    helena->currentTexture = helena->idleTexture;
                 }
 
                 for (int i = 0; i < *enemiesStarted; i++) {
@@ -694,7 +678,7 @@ int main(void) {
             
             case GAMEPLAY:
 
-                Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
+                Rectangle rectsource = {0.0f, 0.0f, (float) helena->currentTexture.width, (float) helena->currentTexture.height};
                 if (helena->facing == 1) {
                     rectsource.width = -rectsource.width;
                 }
@@ -703,7 +687,7 @@ int main(void) {
                 Rectangle rectsource_e[9]; // *enemiesStarted
                 Rectangle rectdest_e[9]; // *enemiesStarted
                 for (int i = 0; i < *enemiesStarted; i++) {
-                    rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->texture.width, (float) enemyList[i]->texture.height};
+                    rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->currentTexture.width, (float) enemyList[i]->currentTexture.height};
                     rectdest_e[i] = enemyList[i]->rect;
                 }
                 
@@ -718,7 +702,7 @@ int main(void) {
                         if (enemyList[i]->active == true) {
                             DrawRectangleRec(enemyList[i]->vision, GRAY);
                             DrawTexturePro(
-                                enemyList[i]->texture,
+                                enemyList[i]->currentTexture,
                                 rectsource_e[i],
                                 rectdest_e[i],
                                 (Vector2){0, 0},
@@ -733,7 +717,7 @@ int main(void) {
 
                     if (helena->active == true) {
                         DrawTexturePro(
-                            helena->texture,
+                            helena->currentTexture,
                             rectsource,
                             rectdest, 
                             (Vector2){0, 0}, 
