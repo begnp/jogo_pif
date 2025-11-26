@@ -7,7 +7,7 @@
 
 Player InitPlayer(Player *player, Texture2D initTex) {
     player->texture = initTex; //textura inicial
-	player->position.x = 200.0f;
+    player->position.x = 200.0f;
     player->position.y = 375.0f;
     player->rect.x = player->position.x;
     player->rect.y = player->position.y;
@@ -17,7 +17,7 @@ Player InitPlayer(Player *player, Texture2D initTex) {
     player->active = true;
     player->velocity = (Vector2){0, 0};
     player->canJump = false;
-	player->attacking = false;
+    player->attacking = false;
     player->attackTime = 0;
     player->lastAttack = 0;
     player->hitbox = (Rectangle) {0, 0, 0, 0};
@@ -41,7 +41,7 @@ bool CanAttack(Player *player, float time) {
     }
 }
 
-void StartPlayerAttack(Player *player, Enemy *enemy) {
+void StartPlayerAttack(Player *player, Enemy *enemy, Map *map) {
     if (player->facing == 0) {
         player->hitbox = (Rectangle) {
             (player->rect.x + player->rect.width),
@@ -66,6 +66,16 @@ void StartPlayerAttack(Player *player, Enemy *enemy) {
         enemy->health -= 20;
         IsEnemyAlive(enemy);
     }
+
+    if (map->wallActive) { 
+        if (CheckCollisionRecs(player->hitbox, map->breakableWall)) {
+            map->wallHealth--; 
+            
+            if (map->wallHealth <= 0) {
+                map->wallActive = false;
+            }
+        }
+    }
 }
 
 bool CanConcludeAttack(Player *player, float time) {
@@ -82,4 +92,3 @@ void ConcludePlayerAttack(Player *player) {
     player->attacking = false;
     player->lastAttack = GetTime();
 }
-    

@@ -116,7 +116,7 @@ int main(void) {
         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
         *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[1][i].x, enemiesManager[1][i].y);
     }
-    
+
 
     Map map;
     InitMap(&map); 
@@ -224,6 +224,16 @@ int main(void) {
                 
                 helena->rect.x += helena->velocity.x * dt;
 
+                if (map.wallActive) {
+                    if (CheckCollisionRecs(helena->rect, map.breakableWall)) {
+                        if (helena->velocity.x > 0) {
+                            helena->rect.x = map.breakableWall.x - helena->rect.width;
+                        } else if (helena->velocity.x < 0) {
+                            helena->rect.x = map.breakableWall.x + map.breakableWall.width;
+                        }
+                    }
+                }
+
                 CheckMapTransition(&map, &helena->rect);
 
                 if (map.currentArea == 1) {
@@ -259,15 +269,6 @@ int main(void) {
                         }
                     }
                 }
-                // enemy0->velocity.y += GRAVITY * dt;
-
-                // enemy0->rect.x += enemy0->velocity.x * dt;
-                // enemy0->rect.y += enemy0->velocity.y * dt;
-
-                // if (CheckCollisionRecs(enemy0->rect, map.platforms[0])) {
-                //     enemy0->rect.y = map.platforms[0].y - enemy0->rect.height;
-                //     enemy0->velocity.y = 0;
-                // }
                 
                 for (int i = 1; i < map.platformsCount; i++) {
                     if (CheckCollisionRecs(helena->rect, map.platforms[i])) {
@@ -282,8 +283,9 @@ int main(void) {
                 }
 
                 if (CanAttack(helena, timer)) {
+
                     for (int i = 0; i < testArea; i++) {
-                        StartPlayerAttack(helena, enemyList[i]);
+                        StartPlayerAttack(helena, enemyList[i], &map);
                     }
                     // StartPlayerAttack(helena, enemy0);
                     if (helena->facing == 0) {
@@ -314,14 +316,6 @@ int main(void) {
                         ConcludeEnemyAttack(enemyList[i]);
                     }
                 }
-                // enemy0->velocity.x = 0;
-                // if (enemy0->active == true) {
-                //     EnemyVision(enemy0, helena);
-                // }
-
-                // if (CanEnemyConcludeAttack(enemy0, timer)) {
-                //     ConcludeEnemyAttack(enemy0);
-                // }
                 
                 UpdateCameraToFollowPlayer(&camera, (Vector2){helena->rect.x, helena->rect.y}, SCREEN_WIDTH, SCREEN_HEIGHT, MAP_WIDTH, MAP_HEIGHT);
 
@@ -403,12 +397,14 @@ int main(void) {
                 }
                 // Rectangle rectsource_e = {0.0f, 0.0f, (float) enemy0->texture.width, (float) enemy0->texture.height};
                 // Rectangle rectdest_e = enemy0->rect;
+
                 
                 DrawMapBackground(&map);
 
                 BeginMode2D(camera);
 
                     DrawMapPlatforms(&map);
+
 
                     for (int i = 0; i < testArea; i++) {
                         if (enemyList[i]->active == true) {
@@ -426,20 +422,6 @@ int main(void) {
                                 DrawText("delay", enemyList[i]->rect.x, enemyList[i]->rect.y, 10, RED);
                         }
                     }
-                    // if (enemy0->active == true) {
-                    //     DrawRectangleRec(enemy0->vision, GRAY);
-                    //     DrawTexturePro(
-                    //         enemy0->texture,
-                    //         rectsource_e,
-                    //         rectdest_e,
-                    //         (Vector2){0, 0},
-                    //         0.0f,
-                    //         WHITE
-                    //     );
-                    //     DrawRectangleRec(enemy0->hitbox, RED);
-                    //     if (enemy0->delayAttack != 0)
-                    //         DrawText("delay", enemy0->rect.x, enemy0->rect.y, 10, RED);
-                    // }
 
                     if (helena->active == true) {
                         DrawTexturePro(
