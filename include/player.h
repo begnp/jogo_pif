@@ -19,6 +19,11 @@ typedef struct Player {
     int hearts;
     bool active;
     Texture texture;
+    Texture2D runTextures[4];   
+    int currentFrame;
+    float frameTimer;
+    float frameSpeed;
+    Texture2D idleTexture;
 } Player;
 
 Player InitPlayer(Player *player, Texture initTex);
