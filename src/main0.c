@@ -30,6 +30,8 @@
 int main(void) {
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Metroid Leveling - Demo");
+    
+    InitAudioDevice();
 
     Texture2D menuBg = LoadTexture("assets/menu.png");
     Menu menu;
