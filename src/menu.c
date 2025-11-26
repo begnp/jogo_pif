@@ -4,6 +4,12 @@
 void InitMenu(Menu *menu, int screenWidth, int screenHeight, Texture2D bgTexture) {
     menu->background = bgTexture;
 
+    menu->music = LoadMusicStream("assets/TrilhaSonoraMenu.mp3");
+
+    menu->music.looping = true;
+
+    PlayMusicStream(menu->music);
+
     menu->colorBgDark = (Color){ 10, 10, 15, 255 }; 
     menu->colorAccent = (Color){ 0, 225, 255, 255 };    
     menu->colorText   = (Color){ 240, 240, 240, 255 }; 
@@ -23,6 +29,7 @@ void InitMenu(Menu *menu, int screenWidth, int screenHeight, Texture2D bgTexture
 }
 
 GameScreen UpdateMenu(Menu *menu, GameScreen currentScreen) {
+    UpdateMusicStream(menu->music);
     Vector2 mousePoint = GetMousePosition();
     bool clicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 

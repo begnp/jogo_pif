@@ -16,6 +16,8 @@ typedef enum GameScreen {
 typedef struct Menu {
     Texture2D background;
     
+    Music music;
+    
     Rectangle btnPlay;
     Rectangle btnLeaderboard;
     Rectangle btnCredits;
