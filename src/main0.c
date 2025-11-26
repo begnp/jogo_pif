@@ -62,7 +62,6 @@ int main(void) {
     
     GameScreen currentScreen = INTRO; 
 
-    // Helena's textures
     Image player_idle = LoadImage("./assets/helena/idle.png");
     Image player_run0 = LoadImage("./assets/helena/run0.png");
     Image player_run1 = LoadImage("./assets/helena/run1.png");
@@ -89,20 +88,6 @@ int main(void) {
     UnloadImage(player_attack0);
     UnloadImage(player_attack1);
     UnloadImage(player_attack2);
-
-
-
-    // Image player_a0 = LoadImage("assets/Ellie_f_a0_right.png");
-    // Image player_a1 = LoadImage("assets/Ellie_f_a1_right.png");
-    // Image player_a2 = LoadImage("assets/Ellie_f_a2_right.png");
-
-    // Texture2D texAttack0 = LoadTextureFromImage(player_a0);
-    // Texture2D texAttack1 = LoadTextureFromImage(player_a1);
-    // Texture2D texAttack2 = LoadTextureFromImage(player_a2);
-
-    // UnloadImage(player_a0);
-    // UnloadImage(player_a1);
-    // UnloadImage(player_a2);
 
     double inicioRun = 0;
     ScoreNode *listaScores = NULL;
@@ -310,10 +295,12 @@ int main(void) {
                     }
 
                     if (currentScreen == LEADERBOARD && proximaTela != LEADERBOARD) {
-                    LiberarLista(listaScores);
-                    listaScores = NULL;
-                    rankingCarregado = false;
-                }
+                        if (listaScores != NULL) {
+                            LiberarLista(listaScores);
+                            listaScores = NULL;
+                        }
+                        rankingCarregado = false;
+                    }
                 
                     currentScreen = proximaTela;
                 }  
@@ -414,18 +401,14 @@ int main(void) {
                 if (helena->attacking) {
                     helena->frameTimer += dt;
                     
-                    // A velocidade do ataque geralmente é mais rápida
-                    // TIME_ATTACK é 0.5s, temos 3 frames. 0.5 / 3 ~= 0.16s por frame.
                     float attackFrameSpeed = 0.12f; 
 
                     if (helena->frameTimer >= attackFrameSpeed) {
                         helena->frameTimer = 0.0f;
                         helena->currentFrame++;
                         
-                        // Se passar do último frame, mantemos no último ou fazemos loop?
-                        // Geralmente ataque toca uma vez (Play Once).
                         if (helena->currentFrame > 2) {
-                            helena->currentFrame = 0; // Loopa para garantir que não crashe
+                            helena->currentFrame = 0; 
                         }
                         
                         helena->currentTexture = helena->attackTextures[helena->currentFrame];
@@ -496,7 +479,6 @@ int main(void) {
                         enemyList[i]->velocity.y = 0;
                     }
 
-                    // Verificar se funciona devidamente
                     for (int j = 0; j < map.platformsCount; j++) {
                         if (CheckCollisionRecs(enemyList[i]->rect, map.platforms[j])) {
                             enemyList[i]->rect.y = map.platforms[j].y - enemyList[i]->rect.height;
@@ -562,7 +544,10 @@ int main(void) {
         {
             case INTRO:
                 {
+                    float currentPhaseTime = 0.0f;
+
                     if (introPhase == 0) {
+                        currentPhaseTime = 3.0f;
                         const char* textoTitulo = "METROID LEVELING";
                         const char* textoDemo = "- DEMO -";
                         
@@ -573,6 +558,7 @@ int main(void) {
                         DrawText(textoDemo, SCREEN_WIDTH/2 - w2/2, SCREEN_HEIGHT/2 + 10, 20, GRAY);
                     }
                     else if (introPhase == 1) {
+                        currentPhaseTime = 7.0f;
                         DrawTexturePro(introImg1, 
                             (Rectangle){0, 0, (float)introImg1.width, (float)introImg1.height},
                             (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
@@ -584,11 +570,11 @@ int main(void) {
                         const char* linha2 = "Monstros desceram, causando caos, destruição e muitas mortes.";
 
                         int cx = SCREEN_WIDTH/2;
-                        
                         DrawText(linha1, cx - MeasureText(linha1, 20)/2, SCREEN_HEIGHT - 90, 20, WHITE);
                         DrawText(linha2, cx - MeasureText(linha2, 20)/2, SCREEN_HEIGHT - 60, 20, WHITE);
                     }
                     else if (introPhase == 2) {
+                        currentPhaseTime = 9.0f;
                         DrawTexturePro(introImg2, 
                             (Rectangle){0, 0, (float)introImg2.width, (float)introImg2.height},
                             (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
@@ -601,12 +587,12 @@ int main(void) {
                         const char* l3 = "incluindo os pais dela.";
 
                         int cx = SCREEN_WIDTH/2;
-                        
                         DrawText(l1, cx - MeasureText(l1, 20)/2, SCREEN_HEIGHT - 110, 20, WHITE);
                         DrawText(l2, cx - MeasureText(l2, 20)/2, SCREEN_HEIGHT - 80, 20, WHITE);
                         DrawText(l3, cx - MeasureText(l3, 20)/2, SCREEN_HEIGHT - 50, 20, WHITE);
                     }
                     else if (introPhase == 3) {
+                        currentPhaseTime = 9.0f;
                         DrawTexturePro(introImg3, 
                             (Rectangle){0, 0, (float)introImg3.width, (float)introImg3.height},
                             (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
@@ -618,11 +604,11 @@ int main(void) {
                         const char* l2 = "e começaram a acabar com os monstros.";
 
                         int cx = SCREEN_WIDTH/2;
-                        
                         DrawText(l1, cx - MeasureText(l1, 20)/2, SCREEN_HEIGHT - 80, 20, WHITE);
                         DrawText(l2, cx - MeasureText(l2, 20)/2, SCREEN_HEIGHT - 50, 20, WHITE);
                     }
                     else if (introPhase == 4) {
+                        currentPhaseTime = 12.0f;
                         DrawTexturePro(introImg4, 
                             (Rectangle){0, 0, (float)introImg4.width, (float)introImg4.height},
                             (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
@@ -636,18 +622,18 @@ int main(void) {
                         const char* l4 = "a origem dos portais. Ela queria descobrir a verdade e vingança...";
 
                         int cx = SCREEN_WIDTH/2;
-                        
                         DrawText(l1, cx - MeasureText(l1, 20)/2, SCREEN_HEIGHT - 130, 20, WHITE);
                         DrawText(l2, cx - MeasureText(l2, 20)/2, SCREEN_HEIGHT - 100, 20, WHITE);
                         DrawText(l3, cx - MeasureText(l3, 20)/2, SCREEN_HEIGHT - 70, 20, WHITE);
                         DrawText(l4, cx - MeasureText(l4, 20)/2, SCREEN_HEIGHT - 40, 20, WHITE);
                     }
                     else if (introPhase == 5) {
+                        currentPhaseTime = 16.0f;
                         DrawTexturePro(introImg5, 
                             (Rectangle){0, 0, (float)introImg5.width, (float)introImg5.height},
                             (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
                             (Vector2){0,0}, 0.0f, WHITE);
-                    
+                        
                         DrawRectangle(0, SCREEN_HEIGHT - 210, SCREEN_WIDTH, 210, Fade(BLACK, 0.8f));
 
                         const char* l1 = "Helena, agora com 21 anos, decidiu entrar num portal por conta própria,";
@@ -668,6 +654,21 @@ int main(void) {
                         DrawText(l5, cx - MeasureText(l5, 20)/2, yBase + spacing*4, 20, WHITE);
                         DrawText(l6, cx - MeasureText(l6, 20)/2, yBase + spacing*5, 20, (Color){0, 225, 255, 255});
                     }
+
+                    float fadeAlpha = 0.0f;
+                    float fadeDuration = 1.0f;
+
+                    if (introTimer < fadeDuration) {
+                        fadeAlpha = 1.0f - (introTimer / fadeDuration);
+                    }
+                    else if (introTimer > currentPhaseTime - fadeDuration) {
+                        fadeAlpha = (introTimer - (currentPhaseTime - fadeDuration)) / fadeDuration;
+                    }
+
+                    if (fadeAlpha < 0.0f) fadeAlpha = 0.0f;
+                    if (fadeAlpha > 1.0f) fadeAlpha = 1.0f;
+
+                    DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Fade(BLACK, fadeAlpha));
 
                     if ((int)(GetTime() * 2) % 2 == 0) {
                         DrawText("[ENTER] PULAR", SCREEN_WIDTH - 150, SCREEN_HEIGHT - 20, 10, WHITE);
@@ -704,7 +705,7 @@ int main(void) {
 
                         char linha[100];
                         sprintf(linha, "%d. %s .  .  .  .  .  .  .  . %s", i+1, aux->nome, tempoTexto);
-                         
+                          
                         DrawText(linha, 320, 180 + (i * 40), 20, menu.colorText);
 
                         aux = aux->next;
