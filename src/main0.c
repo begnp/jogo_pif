@@ -20,6 +20,8 @@
 #define KEY_RIGHT KEY_D
 #define KEY_LEFT KEY_A
 
+#define AMOUNT_AREAS 4
+
 #define AMOUNT_ENEMY_AREA_1 2
 #define AMOUNT_ENEMY_AREA_2 4
 #define AMOUNT_ENEMY_AREA_3 2
@@ -72,15 +74,50 @@ int main(void) {
     // Enemy *enemy0 = (Enemy *) malloc(sizeof(Enemy));
     // *enemy0 = InitEnemy(enemy0, texEnem0, 0);
 
-    Enemy **enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_1 * sizeof(Enemy*));
+    // Enemy **enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_1 * sizeof(Enemy*));
 
-    float enemyX = 500, enemyY = 305;
-    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+    // float enemyX = 500, enemyY = 305;
+    // for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+    //     enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
+    //     *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemyX, enemyY);
+    //     enemyX += 200;
+    // }
+    
+    int testArea = AMOUNT_ENEMY_AREA_2;
+
+    Vector2 **enemiesManager = (Vector2 **) malloc(AMOUNT_AREAS * sizeof(Vector2));
+    enemiesManager[0] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_1) * sizeof(Vector2));
+    enemiesManager[1] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_2) *sizeof(Vector2));
+    enemiesManager[2] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_3) *sizeof(Vector2));
+    enemiesManager[3] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_4) *sizeof(Vector2));
+    
+    enemiesManager[0][0].x = 500;
+    enemiesManager[0][0].y = 305;
+
+    enemiesManager[0][1].x = 700;
+    enemiesManager[0][1].y = 305;
+
+    enemiesManager[1][0].x = 100;
+    enemiesManager[1][0].y = 305;
+
+    enemiesManager[1][1].x = 700;
+    enemiesManager[1][1].y = 305;
+
+    enemiesManager[1][2].x = 100;
+    enemiesManager[1][2].y = 105;
+
+    enemiesManager[1][3].x = 700;
+    enemiesManager[1][3].y = 105;
+
+
+    Enemy **enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_2 * sizeof(Enemy*));
+
+    for (int i = 0; i < AMOUNT_ENEMY_AREA_2; i++) {
         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemyX, enemyY);
-        enemyX += 200;
+        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[1][i].x, enemiesManager[1][i].y);
     }
     
+
     Map map;
     InitMap(&map); 
 
@@ -138,7 +175,7 @@ int main(void) {
                         helena->rect.x = 0; 
                         helena->rect.y = 520 - helena->rect.height; 
                         helena->velocity = (Vector2){0,0};
-                        for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+                        for (int i = 0; i < testArea; i++) {
                             enemyList[i]->active = true;
                         }
                         // enemy0->active = true;
@@ -151,10 +188,6 @@ int main(void) {
         
 
             case GAMEPLAY:
-
-                /* if (map.currentArea == 6 && LoadBoss == false) {
-                    printf("vamos dar load nisso\n");
-                } */
 
                 if (helena->hearts <= 0){
                     float tempoSobrevivido = (float)(GetTime() - inicioRun);
@@ -207,7 +240,7 @@ int main(void) {
                     helena->canJump = true;
                 }
 
-                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+                for (int i = 0; i < testArea; i++) {
                     enemyList[i]->velocity.y += GRAVITY * dt;
 
                     enemyList[i]->rect.x += enemyList[i]->velocity.x * dt;
@@ -216,6 +249,14 @@ int main(void) {
                     if (CheckCollisionRecs(enemyList[i]->rect, map.platforms[0])) {
                         enemyList[i]->rect.y = map.platforms[0].y - enemyList[i]->rect.height;
                         enemyList[i]->velocity.y = 0;
+                    }
+
+                    // Verificar se funciona devidamente
+                    for (int j = 0; j < map.platformsCount; j++) {
+                        if (CheckCollisionRecs(enemyList[i]->rect, map.platforms[j])) {
+                            enemyList[i]->rect.y = map.platforms[j].y - enemyList[i]->rect.height;
+                            enemyList[i]->velocity.y = 0;
+                        }
                     }
                 }
                 // enemy0->velocity.y += GRAVITY * dt;
@@ -241,7 +282,7 @@ int main(void) {
                 }
 
                 if (CanAttack(helena, timer)) {
-                    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+                    for (int i = 0; i < testArea; i++) {
                         StartPlayerAttack(helena, enemyList[i]);
                     }
                     // StartPlayerAttack(helena, enemy0);
@@ -263,7 +304,7 @@ int main(void) {
                     }
                 }
 
-                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+                for (int i = 0; i < testArea; i++) {
                     enemyList[i]->velocity.x = 0;
                     if (enemyList[i]->active == true) {
                         EnemyVision(enemyList[i], helena);
@@ -354,8 +395,9 @@ int main(void) {
                 Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
                 Rectangle rectdest = helena->rect;
 
-                Rectangle rectsource_e[2], rectdest_e[2];
-                for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+                Rectangle rectsource_e[4]; // testArea
+                Rectangle rectdest_e[4]; // testArea
+                for (int i = 0; i < testArea; i++) {
                     rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->texture.width, (float) enemyList[i]->texture.height};
                     rectdest_e[i] = enemyList[i]->rect;
                 }
@@ -368,7 +410,7 @@ int main(void) {
 
                     DrawMapPlatforms(&map);
 
-                    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+                    for (int i = 0; i < testArea; i++) {
                         if (enemyList[i]->active == true) {
                             DrawRectangleRec(enemyList[i]->vision, GRAY);
                             DrawTexturePro(
@@ -444,7 +486,7 @@ int main(void) {
 
     free(helena);
 
-    for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
+    for (int i = 0; i < AMOUNT_ENEMY_AREA_2; i++) {
         free(enemyList[i]);
     }
     free(enemyList);
