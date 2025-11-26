@@ -20,14 +20,12 @@
 #define KEY_RIGHT KEY_D
 #define KEY_LEFT KEY_A
 
-#define AMOUNT_AREAS 6
+#define AMOUNT_AREAS 4
 
 #define AMOUNT_ENEMY_AREA_1 2
 #define AMOUNT_ENEMY_AREA_2 4
 #define AMOUNT_ENEMY_AREA_3 2
-#define AMOUNT_ENEMY_AREA_4 4
-#define AMOUNT_ENEMY_AREA_5 2
-#define AMOUNT_ENEMY_AREA_6 9
+#define AMOUNT_ENEMY_AREA_4 2
 
 int main(void) {
 
@@ -44,13 +42,22 @@ int main(void) {
     PlayMusicStream(musicMenu);
     
     float volumeGame = 0.0f; 
+
+    float introTimer = 0.0f;
+    int introPhase = 0; 
+
+    Texture2D introImg1 = LoadTexture("assets/IntroParte1.png");
+    Texture2D introImg2 = LoadTexture("assets/IntroParte2.png");
+    Texture2D introImg3 = LoadTexture("assets/IntroParte3.png");
+    Texture2D introImg4 = LoadTexture("assets/IntroParte4.png");
+    Texture2D introImg5 = LoadTexture("assets/IntroParte5.png");
     
     Texture2D menuBg = LoadTexture("assets/menu.png");
     Menu menu;
 
     InitMenu(&menu, SCREEN_WIDTH, SCREEN_HEIGHT, menuBg);
     
-    GameScreen currentScreen = MENU; 
+    GameScreen currentScreen = INTRO; 
 
     Image player0 = LoadImage("./assets/Ellie_f0_right.png");
     Image player1 = LoadImage("./assets/Ellie_f0_left.png");
@@ -84,33 +91,15 @@ int main(void) {
     Texture2D texEnem0 = LoadTextureFromImage(imgEnemy0);
 
     UnloadImage(imgEnemy0);
-
-    // Enemy *enemy0 = (Enemy *) malloc(sizeof(Enemy));
-    // *enemy0 = InitEnemy(enemy0, texEnem0, 0);
-
-    // Enemy **enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_1 * sizeof(Enemy*));
-
-    // float enemyX = 500, enemyY = 305;
-    // for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-    //     enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-    //     *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemyX, enemyY);
-    //     enemyX += 200;
-    // }
-    
-    // int testArea = AMOUNT_ENEMY_AREA_2;
-
     
     Map map;
     InitMap(&map); 
-
 
     Vector2 **enemiesManager = (Vector2 **) malloc(AMOUNT_AREAS * sizeof(Vector2));
     enemiesManager[0] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_1) * sizeof(Vector2));
     enemiesManager[1] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_2) *sizeof(Vector2));
     enemiesManager[2] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_3) *sizeof(Vector2));
     enemiesManager[3] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_4) *sizeof(Vector2));
-    enemiesManager[4] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_5) *sizeof(Vector2));
-    enemiesManager[5] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_6) *sizeof(Vector2));
     
     // Area 1
     enemiesManager[0][0].x = 500;
@@ -132,76 +121,9 @@ int main(void) {
     enemiesManager[1][3].x = 700;
     enemiesManager[1][3].y = 105;
 
-    // Area 3
-
-
-    // Area 4
-    enemiesManager[3][0].x = 100;
-    enemiesManager[3][0].y = 305;
-
-    enemiesManager[3][1].x = 700;
-    enemiesManager[3][1].y = 305;
-
-    enemiesManager[3][2].x = 100;
-    enemiesManager[3][2].y = 105;
-
-    enemiesManager[3][3].x = 700;
-    enemiesManager[3][3].y = 105;
-
-    // Area 5
-
-    
-    // Area 6
-    enemiesManager[5][0].x = 150;
-    enemiesManager[5][0].y = 430;
-
-    enemiesManager[5][1].x = 150;
-    enemiesManager[5][1].y = 310;
-
-    enemiesManager[5][2].x = 150;
-    enemiesManager[5][2].y = 190;
-    
-    enemiesManager[5][3].x = 450;
-    enemiesManager[5][3].y = 430;
-    
-    enemiesManager[5][4].x = 450;
-    enemiesManager[5][4].y = 310;
-    
-    enemiesManager[5][5].x = 450;
-    enemiesManager[5][5].y = 190;
-    
-    enemiesManager[5][6].x = 750;
-    enemiesManager[5][6].y = 430;
-    
-    enemiesManager[5][7].x = 750;
-    enemiesManager[5][7].y = 310;
-    
-    enemiesManager[5][8].x = 750;
-    enemiesManager[5][8].y = 190;
-
-
-
     int *enemiesStarted = (int *) malloc(sizeof(int));
     *enemiesStarted = 0;
     Enemy **enemyList;
-    // if (map.currentArea == 1 && enemiesStarted == 0) {
-    //     enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_1 * sizeof(Enemy*));
-    //     for (int i = 0; i < AMOUNT_ENEMY_AREA_1; i++) {
-    //         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-    //         *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[0][i].x, enemiesManager[0][i].y);
-    //         *enemiesStarted = AMOUNT_ENEMY_AREA_1;
-    //     }
-    // }
-    // else if (map.currentArea == 2 && enemiesStarted == 0) {
-    //     enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_2 * sizeof(Enemy*));
-    //     for (int i = 0; i < AMOUNT_ENEMY_AREA_2; i++) {
-    //         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-    //         *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[1][i].x, enemiesManager[1][i].y);
-    //         *enemiesStarted = AMOUNT_ENEMY_AREA_2;
-    //     }
-    // }
-
-    // bool LoadBoss = false;
     
     SetTargetFPS(60);
 
@@ -215,16 +137,60 @@ int main(void) {
 
         float dt = GetFrameTime();
 
-        /* if (IsKeyPressed(KEY_F11)) {
-            ToggleFullscreen();
-        } */
-
         if (currentScreen == EXIT) {
             break; 
         }
         
         switch(currentScreen) 
         {
+            case INTRO:
+                {
+                    UpdateMusicStream(musicMenu);
+                    
+                    introTimer += dt;
+
+                    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+                        currentScreen = MENU;
+                    }
+
+                    if (introPhase == 0) {
+                        if (introTimer > 3.0f) {
+                            introPhase = 1;
+                            introTimer = 0; 
+                        }
+                    } 
+                    else if (introPhase == 1) {
+                        if (introTimer > 7.0f) {
+                            introPhase = 2;
+                            introTimer = 0;
+                        }
+                    }
+                    else if (introPhase == 2) {
+                        if (introTimer > 9.0f) {
+                            introPhase = 3; 
+                            introTimer = 0;
+                        }
+                    }
+                    else if (introPhase == 3) {
+                        if (introTimer > 9.0f) {
+                            introPhase = 4;
+                            introTimer = 0;
+                        }
+                    }
+                    else if (introPhase == 4) {
+                        if (introTimer > 12.0f) {
+                            introPhase = 5;
+                            introTimer = 0;
+                        }
+                    }
+                    else if (introPhase == 5) {
+                        if (introTimer > 16.0f) {
+                            currentScreen = MENU;
+                        }
+                    }
+                }
+                break;
+
             case MENU:
             case LEADERBOARD:
             case CREDITS:
@@ -267,8 +233,7 @@ int main(void) {
                         for (int i = 0; i < *enemiesStarted; i++) {
                             enemyList[i]->active = true;
                         }
-                        *enemiesStarted = 0;
-                        // enemy0->active = true;
+                        
                         currentScreen = MENU; 
                     }
                 }
@@ -301,14 +266,6 @@ int main(void) {
                         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
                         *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[1][i].x, enemiesManager[1][i].y);
                         *enemiesStarted = AMOUNT_ENEMY_AREA_2;
-                    }
-                }
-                else if (map.currentArea == 6 && *enemiesStarted == 0) {
-                    enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_6 * sizeof(Enemy*));
-                    for (int i = 0; i < AMOUNT_ENEMY_AREA_6; i++) {
-                        enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
-                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[5][i].x, enemiesManager[5][i].y);
-                        *enemiesStarted = AMOUNT_ENEMY_AREA_6;
                     }
                 }
 
@@ -410,7 +367,7 @@ int main(void) {
                     for (int i = 0; i < *enemiesStarted; i++) {
                         StartPlayerAttack(helena, enemyList[i], &map);
                     }
-                    // StartPlayerAttack(helena, enemy0);
+                    
                     if (helena->facing == 0) {
                         helena->texture = texPlayerAttackRight;
                     }
@@ -450,14 +407,129 @@ int main(void) {
         }
 
         BeginDrawing();
-        if (currentScreen == GAMEPLAY) {
-            ClearBackground(BLACK); 
+        if (currentScreen == GAMEPLAY || currentScreen == INTRO) {
+             ClearBackground(BLACK);
         } else {
             ClearBackground(menu.colorBgDark);
         }
 
         switch(currentScreen) 
         {
+            case INTRO:
+                {
+                    if (introPhase == 0) {
+                        const char* textoTitulo = "METROID LEVELING";
+                        const char* textoDemo = "- DEMO -";
+                        
+                        int w1 = MeasureText(textoTitulo, 50);
+                        int w2 = MeasureText(textoDemo, 20);
+                        
+                        DrawText(textoTitulo, SCREEN_WIDTH/2 - w1/2, SCREEN_HEIGHT/2 - 50, 50, (Color){0, 225, 255, 255}); 
+                        DrawText(textoDemo, SCREEN_WIDTH/2 - w2/2, SCREEN_HEIGHT/2 + 10, 20, GRAY);
+                    }
+                    else if (introPhase == 1) {
+                        DrawTexturePro(introImg1, 
+                            (Rectangle){0, 0, (float)introImg1.width, (float)introImg1.height},
+                            (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
+                            (Vector2){0,0}, 0.0f, WHITE);
+                        
+                        DrawRectangle(0, SCREEN_HEIGHT - 120, SCREEN_WIDTH, 120, Fade(BLACK, 0.7f));
+
+                        const char* linha1 = "Há 21 anos, portais surgiram e se abriram nos céus...";
+                        const char* linha2 = "Monstros desceram, causando caos, destruição e muitas mortes.";
+
+                        int cx = SCREEN_WIDTH/2;
+                        
+                        DrawText(linha1, cx - MeasureText(linha1, 20)/2, SCREEN_HEIGHT - 90, 20, WHITE);
+                        DrawText(linha2, cx - MeasureText(linha2, 20)/2, SCREEN_HEIGHT - 60, 20, WHITE);
+                    }
+                    else if (introPhase == 2) {
+                        DrawTexturePro(introImg2, 
+                            (Rectangle){0, 0, (float)introImg2.width, (float)introImg2.height},
+                            (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
+                            (Vector2){0,0}, 0.0f, WHITE);
+                        
+                        DrawRectangle(0, SCREEN_HEIGHT - 140, SCREEN_WIDTH, 140, Fade(BLACK, 0.8f));
+
+                        const char* l1 = "Nesse dia, Helena tinha acabado de nascer, mas algo terrível aconteceu...";
+                        const char* l2 = "Um dos monstros entrou no hospital e matou várias pessoas,";
+                        const char* l3 = "incluindo os pais dela.";
+
+                        int cx = SCREEN_WIDTH/2;
+                        
+                        DrawText(l1, cx - MeasureText(l1, 20)/2, SCREEN_HEIGHT - 110, 20, WHITE);
+                        DrawText(l2, cx - MeasureText(l2, 20)/2, SCREEN_HEIGHT - 80, 20, WHITE);
+                        DrawText(l3, cx - MeasureText(l3, 20)/2, SCREEN_HEIGHT - 50, 20, WHITE);
+                    }
+                    else if (introPhase == 3) {
+                        DrawTexturePro(introImg3, 
+                            (Rectangle){0, 0, (float)introImg3.width, (float)introImg3.height},
+                            (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
+                            (Vector2){0,0}, 0.0f, WHITE);
+                        
+                        DrawRectangle(0, SCREEN_HEIGHT - 120, SCREEN_WIDTH, 120, Fade(BLACK, 0.8f));
+
+                        const char* l1 = "Porém, nesse mesmo dia, pessoas com super poderes apareceram";
+                        const char* l2 = "e começaram a acabar com os monstros.";
+
+                        int cx = SCREEN_WIDTH/2;
+                        
+                        DrawText(l1, cx - MeasureText(l1, 20)/2, SCREEN_HEIGHT - 80, 20, WHITE);
+                        DrawText(l2, cx - MeasureText(l2, 20)/2, SCREEN_HEIGHT - 50, 20, WHITE);
+                    }
+                    else if (introPhase == 4) {
+                        DrawTexturePro(introImg4, 
+                            (Rectangle){0, 0, (float)introImg4.width, (float)introImg4.height},
+                            (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
+                            (Vector2){0,0}, 0.0f, WHITE);
+                        
+                        DrawRectangle(0, SCREEN_HEIGHT - 160, SCREEN_WIDTH, 160, Fade(BLACK, 0.8f));
+
+                        const char* l1 = "Helena cresceu num orfanato com muitas outras crianças e adolescentes";
+                        const char* l2 = "que também perderam seus pais naquele desastre.";
+                        const char* l3 = "Helena, no entanto, não superou a dor e estava determinada a investigar";
+                        const char* l4 = "a origem dos portais. Ela queria descobrir a verdade e vingança...";
+
+                        int cx = SCREEN_WIDTH/2;
+                        
+                        DrawText(l1, cx - MeasureText(l1, 20)/2, SCREEN_HEIGHT - 130, 20, WHITE);
+                        DrawText(l2, cx - MeasureText(l2, 20)/2, SCREEN_HEIGHT - 100, 20, WHITE);
+                        DrawText(l3, cx - MeasureText(l3, 20)/2, SCREEN_HEIGHT - 70, 20, WHITE);
+                        DrawText(l4, cx - MeasureText(l4, 20)/2, SCREEN_HEIGHT - 40, 20, WHITE);
+                    }
+                    else if (introPhase == 5) {
+                        DrawTexturePro(introImg5, 
+                            (Rectangle){0, 0, (float)introImg5.width, (float)introImg5.height},
+                            (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT},
+                            (Vector2){0,0}, 0.0f, WHITE);
+                    
+                        DrawRectangle(0, SCREEN_HEIGHT - 210, SCREEN_WIDTH, 210, Fade(BLACK, 0.8f));
+
+                        const char* l1 = "Helena, agora com 21 anos, decidiu entrar num portal por conta própria,";
+                        const char* l2 = "mesmo sabendo ser perigoso para ela que não tinha poderes,";
+                        const char* l3 = "mesmo sabendo que o governo avisava sempre para alertar as autoridades";
+                        const char* l4 = "se qualquer pessoa avistasse o surgimento de um novo portal.";
+                        const char* l5 = "Helena ignorou tudo isso, pegou uma faca, sua mochila e entrou sozinha...";
+                        const char* l6 = "E É AQUI QUE NOSSA HISTÓRIA COMEÇA.";
+
+                        int cx = SCREEN_WIDTH/2;
+                        int yBase = SCREEN_HEIGHT - 180;
+                        int spacing = 30;
+                        
+                        DrawText(l1, cx - MeasureText(l1, 20)/2, yBase, 20, WHITE);
+                        DrawText(l2, cx - MeasureText(l2, 20)/2, yBase + spacing, 20, WHITE);
+                        DrawText(l3, cx - MeasureText(l3, 20)/2, yBase + spacing*2, 20, WHITE);
+                        DrawText(l4, cx - MeasureText(l4, 20)/2, yBase + spacing*3, 20, WHITE);
+                        DrawText(l5, cx - MeasureText(l5, 20)/2, yBase + spacing*4, 20, WHITE);
+                        DrawText(l6, cx - MeasureText(l6, 20)/2, yBase + spacing*5, 20, (Color){0, 225, 255, 255});
+                    }
+
+                    if ((int)(GetTime() * 2) % 2 == 0) {
+                        DrawText("[ENTER] PULAR", SCREEN_WIDTH - 150, SCREEN_HEIGHT - 20, 10, WHITE);
+                    }
+                }
+                break;
+
             case MENU:
             case CREDITS:
                 DrawMenu(&menu, currentScreen);
@@ -512,15 +584,12 @@ int main(void) {
                 Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
                 Rectangle rectdest = helena->rect;
                 
-                Rectangle rectsource_e[9]; // *enemiesStarted
-                Rectangle rectdest_e[9]; // *enemiesStarted
+                Rectangle rectsource_e[4]; // *enemiesStarted
+                Rectangle rectdest_e[4]; // *enemiesStarted
                 for (int i = 0; i < *enemiesStarted; i++) {
                     rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->texture.width, (float) enemyList[i]->texture.height};
                     rectdest_e[i] = enemyList[i]->rect;
                 }
-                // Rectangle rectsource_e = {0.0f, 0.0f, (float) enemy0->texture.width, (float) enemy0->texture.height};
-                // Rectangle rectdest_e = enemy0->rect;
-
                 
                 DrawMapBackground(&map);
 
@@ -579,6 +648,12 @@ int main(void) {
     
     ToggleBorderlessWindowed();
 
+    UnloadTexture(introImg1);
+    UnloadTexture(introImg2);
+    UnloadTexture(introImg3);
+    UnloadTexture(introImg4); 
+    UnloadTexture(introImg5);
+    
     UnloadMusicStream(musicMenu);
     UnloadMusicStream(musicGame);
     CloseAudioDevice();

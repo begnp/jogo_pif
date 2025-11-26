@@ -5,6 +5,7 @@
 
 typedef enum GameScreen { 
     LOGO = 0, 
+    INTRO,
     MENU, 
     GAMEPLAY, 
     LEADERBOARD, 
