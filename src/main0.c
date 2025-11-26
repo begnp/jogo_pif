@@ -30,9 +30,19 @@
 int main(void) {
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Metroid Leveling - Demo");
-    
-    InitAudioDevice();
 
+    InitAudioDevice();
+    
+    Music musicMenu = LoadMusicStream("assets/TrilhaSonoraMenu.mp3");
+    Music musicGame = LoadMusicStream("assets/TrilhaSonoraMapa.mp3");
+    
+    musicMenu.looping = true;
+    musicGame.looping = true;
+    
+    PlayMusicStream(musicMenu);
+    
+    float volumeGame = 0.0f; 
+    
     Texture2D menuBg = LoadTexture("assets/menu.png");
     Menu menu;
 
@@ -151,26 +161,35 @@ int main(void) {
             case LEADERBOARD:
             case CREDITS:
                 {   
-                GameScreen proximaTela = UpdateMenu(&menu, currentScreen);
+                    UpdateMusicStream(musicMenu);
+
+                    GameScreen proximaTela = UpdateMenu(&menu, currentScreen);
                 
-               
-                if (proximaTela == GAMEPLAY) {
-                    inicioRun = GetTime();
-                    
-                    helena->hearts = 3; 
-                    helena->active = true;
-                    helena->rect.x = 100.0f; 
-                    helena->rect.y = 400.0f;
-                }
+                    if (proximaTela == GAMEPLAY) {
+                        
+                        StopMusicStream(musicMenu);
+                        PlayMusicStream(musicGame);
+                        volumeGame = 0.0f; 
+                        SetMusicVolume(musicGame, volumeGame);
+
+                        inicioRun = GetTime();
+                        
+                        helena->hearts = 3; 
+                        helena->active = true;
+                        helena->rect.x = 100.0f; 
+                        helena->rect.y = 400.0f;
+                    }
                 
-                currentScreen = proximaTela;
-            }  
-                
+                    currentScreen = proximaTela;
+                }  
                 break;
             
             case GAMEOVER:
                 if (CheckCollisionPointRec(GetMousePosition(), btnBack)) {
                     if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+
+                        StopMusicStream(musicGame);
+                        PlayMusicStream(musicMenu);
 
                         helena->hearts = 3; 
                         helena->active = true;
@@ -190,6 +209,14 @@ int main(void) {
         
 
             case GAMEPLAY:
+
+                UpdateMusicStream(musicGame);
+                
+                if (volumeGame < 1.0f) {
+                    volumeGame += 0.3f * dt; 
+                    if (volumeGame > 1.0f) volumeGame = 1.0f;
+                    SetMusicVolume(musicGame, volumeGame);
+                }
 
                 if (helena->hearts <= 0){
                     float tempoSobrevivido = (float)(GetTime() - inicioRun);
@@ -458,6 +485,10 @@ int main(void) {
     
     ToggleBorderlessWindowed();
 
+    UnloadMusicStream(musicMenu);
+    UnloadMusicStream(musicGame);
+    CloseAudioDevice();
+
     UnloadTexture(texPlayerRight);
     UnloadTexture(texPlayerLeft);
     UnloadTexture(texPlayerAttackRight);
@@ -474,7 +505,6 @@ int main(void) {
         free(enemyList[i]);
     }
     free(enemyList);
-    // free(enemy0);
     
     CloseWindow();
     
