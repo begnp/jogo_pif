@@ -171,7 +171,7 @@ void CheckMapTransition(Map *map, Rectangle *playerRect, int *enemiesStarted) {
     else if (map->currentArea == 2) {
         if (playerRect->x < 10) {
             if (playerRect->y > 350) { 
-                LoadArea(map, 1);    
+                LoadArea(map, 1);
                 *enemiesStarted = 0;
                 playerRect->x = 950; 
                 playerRect->y = 500 - playerRect->height; 
@@ -180,6 +180,7 @@ void CheckMapTransition(Map *map, Rectangle *playerRect, int *enemiesStarted) {
         else if (playerRect->y < -40) {
             if (playerRect->x > 350 && playerRect->x < 650) {
                 LoadArea(map, 4);
+                *enemiesStarted = 0;
                 playerRect->y = 500;
             }
         }
@@ -187,6 +188,7 @@ void CheckMapTransition(Map *map, Rectangle *playerRect, int *enemiesStarted) {
         else if (playerRect->x > 980) {
             if (playerRect->y < 200) { 
                 LoadArea(map, 5);
+                *enemiesStarted = 0;
                 playerRect->x = 60; 
                 playerRect->y = 199; 
             }
@@ -196,11 +198,13 @@ void CheckMapTransition(Map *map, Rectangle *playerRect, int *enemiesStarted) {
     else if (map->currentArea == 4) {
         if (playerRect->y > 600) {
             LoadArea(map, 2);
+            *enemiesStarted = 0;
             playerRect->y = -30; 
         }
 
         else if (playerRect->x > 980) {
-            LoadArea(map, 6); 
+            LoadArea(map, 6);
+            *enemiesStarted = 0;
             playerRect->x = 60;
             if (playerRect->y < 400) playerRect->y = 450; 
         }
@@ -209,6 +213,7 @@ void CheckMapTransition(Map *map, Rectangle *playerRect, int *enemiesStarted) {
     else if (map->currentArea == 5) {
         if (playerRect->x < 10) {
             LoadArea(map, 2);
+            *enemiesStarted = 0;
             playerRect->x = 940; 
             playerRect->y = 170; 
         }
@@ -217,6 +222,7 @@ void CheckMapTransition(Map *map, Rectangle *playerRect, int *enemiesStarted) {
     else if (map->currentArea == 6) {
         if (playerRect->x < 10) {
             LoadArea(map, 4);
+            *enemiesStarted = 0;
             playerRect->x = 950;
         }
     }
@@ -234,7 +240,7 @@ void InitMap(Map *map) {
     map->wallHealth = 3;
     map->platforms = NULL;
     
-    LoadArea(map, 4);
+    LoadArea(map, 1);
 }
 
 void DrawMapBackground(Map *map) {

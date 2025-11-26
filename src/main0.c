@@ -20,12 +20,14 @@
 #define KEY_RIGHT KEY_D
 #define KEY_LEFT KEY_A
 
-#define AMOUNT_AREAS 4
+#define AMOUNT_AREAS 6
 
 #define AMOUNT_ENEMY_AREA_1 2
 #define AMOUNT_ENEMY_AREA_2 4
 #define AMOUNT_ENEMY_AREA_3 2
-#define AMOUNT_ENEMY_AREA_4 2
+#define AMOUNT_ENEMY_AREA_4 4
+#define AMOUNT_ENEMY_AREA_5 2
+#define AMOUNT_ENEMY_AREA_6 9
 
 int main(void) {
 
@@ -107,6 +109,8 @@ int main(void) {
     enemiesManager[1] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_2) *sizeof(Vector2));
     enemiesManager[2] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_3) *sizeof(Vector2));
     enemiesManager[3] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_4) *sizeof(Vector2));
+    enemiesManager[4] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_5) *sizeof(Vector2));
+    enemiesManager[5] = (Vector2 *) malloc((AMOUNT_ENEMY_AREA_6) *sizeof(Vector2));
     
     // Area 1
     enemiesManager[0][0].x = 500;
@@ -132,12 +136,48 @@ int main(void) {
 
 
     // Area 4
+    enemiesManager[3][0].x = 100;
+    enemiesManager[3][0].y = 305;
 
+    enemiesManager[3][1].x = 700;
+    enemiesManager[3][1].y = 305;
+
+    enemiesManager[3][2].x = 100;
+    enemiesManager[3][2].y = 105;
+
+    enemiesManager[3][3].x = 700;
+    enemiesManager[3][3].y = 105;
 
     // Area 5
 
     
     // Area 6
+    enemiesManager[5][0].x = 150;
+    enemiesManager[5][0].y = 430;
+
+    enemiesManager[5][1].x = 150;
+    enemiesManager[5][1].y = 310;
+
+    enemiesManager[5][2].x = 150;
+    enemiesManager[5][2].y = 190;
+    
+    enemiesManager[5][3].x = 450;
+    enemiesManager[5][3].y = 430;
+    
+    enemiesManager[5][4].x = 450;
+    enemiesManager[5][4].y = 310;
+    
+    enemiesManager[5][5].x = 450;
+    enemiesManager[5][5].y = 190;
+    
+    enemiesManager[5][6].x = 750;
+    enemiesManager[5][6].y = 430;
+    
+    enemiesManager[5][7].x = 750;
+    enemiesManager[5][7].y = 310;
+    
+    enemiesManager[5][8].x = 750;
+    enemiesManager[5][8].y = 190;
 
 
 
@@ -227,6 +267,7 @@ int main(void) {
                         for (int i = 0; i < *enemiesStarted; i++) {
                             enemyList[i]->active = true;
                         }
+                        *enemiesStarted = 0;
                         // enemy0->active = true;
                         currentScreen = MENU; 
                     }
@@ -260,6 +301,14 @@ int main(void) {
                         enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
                         *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[1][i].x, enemiesManager[1][i].y);
                         *enemiesStarted = AMOUNT_ENEMY_AREA_2;
+                    }
+                }
+                else if (map.currentArea == 6 && *enemiesStarted == 0) {
+                    enemyList = (Enemy **) malloc(AMOUNT_ENEMY_AREA_6 * sizeof(Enemy*));
+                    for (int i = 0; i < AMOUNT_ENEMY_AREA_6; i++) {
+                        enemyList[i] = (Enemy *) malloc(sizeof(Enemy));
+                        *(enemyList[i]) = InitEnemy(enemyList[i], texEnem0, 0, enemiesManager[5][i].x, enemiesManager[5][i].y);
+                        *enemiesStarted = AMOUNT_ENEMY_AREA_6;
                     }
                 }
 
@@ -463,8 +512,8 @@ int main(void) {
                 Rectangle rectsource = {0.0f, 0.0f, (float) helena->texture.width, (float) helena->texture.height};
                 Rectangle rectdest = helena->rect;
                 
-                Rectangle rectsource_e[4]; // *enemiesStarted
-                Rectangle rectdest_e[4]; // *enemiesStarted
+                Rectangle rectsource_e[9]; // *enemiesStarted
+                Rectangle rectdest_e[9]; // *enemiesStarted
                 for (int i = 0; i < *enemiesStarted; i++) {
                     rectsource_e[i] = (Rectangle) {0.0f, 0.0f, (float) enemyList[i]->texture.width, (float) enemyList[i]->texture.height};
                     rectdest_e[i] = enemyList[i]->rect;
