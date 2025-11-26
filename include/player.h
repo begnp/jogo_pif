@@ -20,7 +20,8 @@ typedef struct Player {
     bool active;
     Texture currentTexture;
     Texture2D runTextures[4];
-    Texture2D attackTextures[3]; 
+    Texture2D attackTextures[3];
+    Texture2D jumpTextures[3]; 
     int currentFrame;
     float frameTimer;
     float frameSpeed;

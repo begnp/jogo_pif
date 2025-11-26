@@ -71,6 +71,9 @@ int main(void) {
     Image player_attack0 = LoadImage("./assets/helena/attack0.png");
     Image player_attack1 = LoadImage("./assets/helena/attack1.png");
     Image player_attack2 = LoadImage("./assets/helena/attack2.png");
+    Image player_jump0 = LoadImage("./assets/helena/jump0.png");
+    Image player_jump1 = LoadImage("./assets/helena/jump1.png");
+    Image player_jump2 = LoadImage("./assets/helena/jump2.png");
 
     Texture2D texPlayerIdle = LoadTextureFromImage(player_idle);
     Texture2D texPlayerRun0 = LoadTextureFromImage(player_run0);
@@ -80,6 +83,9 @@ int main(void) {
     Texture2D texPlayerAttack0 = LoadTextureFromImage(player_attack0);
     Texture2D texPlayerAttack1 = LoadTextureFromImage(player_attack1);
     Texture2D texPlayerAttack2 = LoadTextureFromImage(player_attack2);
+    Texture2D texPlayerJump0 = LoadTextureFromImage(player_jump0);
+    Texture2D texPlayerJump1 = LoadTextureFromImage(player_jump1);
+    Texture2D texPlayerJump2 = LoadTextureFromImage(player_jump2);
 
     UnloadImage(player_idle);
     UnloadImage(player_run0);
@@ -89,6 +95,9 @@ int main(void) {
     UnloadImage(player_attack0);
     UnloadImage(player_attack1);
     UnloadImage(player_attack2);
+    UnloadImage(player_jump0);
+    UnloadImage(player_jump1);
+    UnloadImage(player_jump2);
 
 
 
@@ -122,6 +131,10 @@ int main(void) {
     helena->attackTextures[0] = texPlayerAttack0;
     helena->attackTextures[1] = texPlayerAttack1;
     helena->attackTextures[2] = texPlayerAttack2;
+
+    helena->jumpTextures[0] = texPlayerJump0;
+    helena->jumpTextures[1] = texPlayerJump1;
+    helena->jumpTextures[2] = texPlayerJump2;
 
     helena->frameSpeed = 0.15f;
     helena->frameTimer = 0.0f;
@@ -430,6 +443,18 @@ int main(void) {
                         
                         helena->currentTexture = helena->attackTextures[helena->currentFrame];
                     }
+                }
+                else if (helena->velocity.y > 200) {
+                    helena->currentTexture = helena->jumpTextures[2];
+                    printf("2\n");
+                }
+                else if (helena->velocity.y >= -200 && helena->velocity.y <= 200 && helena->velocity.y != 0) {
+                    helena->currentTexture = helena->jumpTextures[1];
+                    printf("1\n");
+                }
+                else if (helena->velocity.y < -200) {
+                    helena->currentTexture = helena->jumpTextures[0];
+                    printf("0\n");
                 }
                 else if (isMoving && !helena->attacking && helena->canJump) {
                     helena->frameTimer += dt;
@@ -837,6 +862,9 @@ int main(void) {
     UnloadTexture(texPlayerAttack0);
     UnloadTexture(texPlayerAttack1);
     UnloadTexture(texPlayerAttack2);
+    UnloadTexture(texPlayerJump0);
+    UnloadTexture(texPlayerJump1);
+    UnloadTexture(texPlayerJump2);
 
     UnloadTexture(texEnem0);
     UnloadTexture(menuBg);
