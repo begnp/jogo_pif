@@ -59,6 +59,8 @@ quando portais surgiram e abriram nos céus trazendo monstros com eles. Helena a
    make run
    ```
 
+Caso tenha qualquer problema consulte a documentação da [RayLib para Linux](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux)
+
 ## 📜 Menu Principal
 
 A tela de menu oferece as seguintes opções:
