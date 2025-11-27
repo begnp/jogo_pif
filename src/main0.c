@@ -1033,7 +1033,7 @@ int main(void) {
 
     UnloadTexture(menuBg);
 
-    unloadImage(imgAdaga);
+    UnloadImage(imgAdaga);
     UnloadMap(&map);
 
     free(helena);
