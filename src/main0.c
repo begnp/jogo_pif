@@ -483,12 +483,12 @@ int main(void) {
                     currentScreen = GAMEOVER;
                 }
 
-                if (helena->InimigosMortos >= 20) {
+                if (helena->InimigosMortos >= 1) {
 
                     StopMusicStream(musicGame); 
                     PlayMusicStream(musicWin); 
 
-                    currentScreen = CREDITS; 
+                    currentScreen = WIN; 
                 }
 
                 helena->velocity.x = 0;
@@ -687,11 +687,15 @@ int main(void) {
                 
                 break;
 
+            case WIN:
+            currentScreen = UpdateMenu(&menu, currentScreen);
+            break;
+
                 default: break;
         }
 
         BeginDrawing();
-        if (currentScreen == GAMEPLAY || currentScreen == INTRO) {
+        if (currentScreen == GAMEPLAY || currentScreen == INTRO || currentScreen == WIN) {
              ClearBackground(BLACK);
         } else {
             ClearBackground(menu.colorBgDark);
@@ -971,8 +975,33 @@ int main(void) {
                 
                 break;
 
+            case WIN:
+            
+            DrawMapBackground(&map);
+            DrawMapPlatforms(&map);
+
+            // ... (código que desenha Boss, Inimigos e Player) ...
+            // (Mantenha todo o seu código de desenho do jogo aqui)
+            // ...
+
+            DrawMapForeground(&map);
+            
+            // HUD
+            for (int i = 0; i < helena->hearts; i++) {
+                DrawRectangle(20 + (i * 40), 20, 30, 30, RED); 
+            }
+            DrawText(TextFormat("Kills: %d / 20", helena->InimigosMortos), 20, 60, 20, WHITE);
+
+            // 2. ADICIONE ISTO NO FINAL DO CASE (antes do break)
+            // Se for WIN, desenhamos a tela de vitória POR CIMA do jogo
+            if (currentScreen == WIN) {
+                DrawMenu(&menu, currentScreen);
+            }
+
+            break; // Fim do case GAMEPLAY/WIN
+
                 default: break;
-        }
+            }
         
         EndDrawing();
         

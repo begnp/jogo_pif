@@ -26,6 +26,10 @@ void InitMenu(Menu *menu, int screenWidth, int screenHeight, Texture2D bgTexture
     menu->btnExit        = (Rectangle){ centerX, startY + spacing * 3, buttonWidth, buttonHeight };
 
     menu->btnBack = (Rectangle){ 50, screenHeight - 80, 150, 40 };
+
+    float winBtnY = 400; 
+    menu->btnWinBack = (Rectangle){ screenWidth / 2.0f - 150, winBtnY, 300, 50 };
+    menu->btnWinExit = (Rectangle){ screenWidth / 2.0f - 150, winBtnY + 70, 300, 50 };
 }
 
 GameScreen UpdateMenu(Menu *menu, GameScreen currentScreen) {
@@ -41,6 +45,18 @@ GameScreen UpdateMenu(Menu *menu, GameScreen currentScreen) {
     }
     else if (currentScreen == LEADERBOARD || currentScreen == CREDITS) {
         if (CheckCollisionPointRec(mousePoint, menu->btnBack) && clicked) return MENU;
+    }else if (currentScreen == WIN){
+        if (CheckCollisionPointRec(mousePoint, menu->btnWinBack)) {
+            if (clicked) {
+                return MENU;
+            }
+        }
+
+        if (CheckCollisionPointRec(mousePoint, menu->btnWinExit)) {
+            if (clicked) {
+                return EXIT;
+            }
+        }
     }
 
     return currentScreen;
@@ -126,4 +142,26 @@ void DrawMenu(Menu *menu, GameScreen currentScreen) {
         
         DrawSystemButton(menu, menu->btnBack, "< VOLTAR", mousePoint);
     }
+
+    else if (currentScreen == WIN) {
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.8f));
+
+        const char *texto1 = "MISSÃO CUMPRIDA!";
+        const char *texto2 = "Você eliminou a ameaça.";
+        
+        int textW1 = MeasureText(texto1, 40);
+        int textW2 = MeasureText(texto2, 20);
+
+        DrawText(texto1, GetScreenWidth()/2 - textW1/2, 200, 40, GREEN);
+        DrawText(texto2, GetScreenWidth()/2 - textW2/2, 260, 20, WHITE);
+
+        bool hoverBack = CheckCollisionPointRec(mousePoint, menu->btnWinBack);
+        DrawRectangleRec(menu->btnWinBack, hoverBack ? menu->colorAccent : GRAY);
+        DrawText("MENU PRINCIPAL", menu->btnWinBack.x + 60, menu->btnWinBack.y + 15, 20, BLACK);
+
+        bool hoverExit = CheckCollisionPointRec(mousePoint, menu->btnWinExit);
+        DrawRectangleRec(menu->btnWinExit, hoverExit ? RED : GRAY);
+        DrawText("SAIR DO JOGO", menu->btnWinExit.x + 80, menu->btnWinExit.y + 15, 20, WHITE);
+    }
 }
+

@@ -11,7 +11,8 @@ typedef enum GameScreen {
     LEADERBOARD, 
     CREDITS,
     EXIT,
-    GAMEOVER
+    GAMEOVER,
+    WIN
 } GameScreen;
 
 typedef struct Menu {
@@ -25,7 +26,8 @@ typedef struct Menu {
     Rectangle btnBack;
     Rectangle btnExit;
 
-    
+    Rectangle btnWinBack; 
+    Rectangle btnWinExit;
 
     Color colorBgDark;      
     Color colorAccent;      
