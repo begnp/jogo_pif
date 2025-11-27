@@ -373,6 +373,7 @@ int main(void) {
                         *enemiesStarted = 0;
                         
                         currentScreen = MENU; 
+                        helena->InimigosMortos = 0;
                     }
                 }
                 break;
