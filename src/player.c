@@ -14,6 +14,7 @@ Player InitPlayer(Player *player, Texture2D initTex) {
     player->rect.width = (float) player->currentTexture.width * 0.2;
     player->rect.height = (float) player->currentTexture.height * 0.2;
     player->hearts = 3;
+    player->damage = 20;
     player->active = true;
     player->velocity = (Vector2){0, 0};
     player->canJump = false;
@@ -66,7 +67,7 @@ void StartPlayerAttack(Player *player, Enemy *enemy, Map *map) {
 
 if (CheckCollisionRecs(player->hitbox, enemy->rect)) {
     if (enemy->active) {
-        enemy->health -= 20;
+        enemy->health -= player->damage;
         
         if (enemy->health <= 0) {
             player->InimigosMortos++; 
