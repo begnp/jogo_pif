@@ -3,6 +3,7 @@
 #include "player.h"
 #include "menu.h"
 #include "map.h"
+#include "item.h"
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -158,11 +159,14 @@ int main(void) {
     UnloadImage(enemy_attack1);
     UnloadImage(enemy_attack2);
     
-    Image imgEnemy0 = LoadImage("./assets/snorlax.png");
+    Image imgAdaga = LoadImage("assets/Dagger1.png"); 
+    
+    ImageResize(&imgAdaga, 35, 35);
+    Texture2D texAdaga = LoadTextureFromImage(imgAdaga); 
+    
 
-    Texture2D texEnem0 = LoadTextureFromImage(imgEnemy0);
-
-    UnloadImage(imgEnemy0);
+    Item adaga;
+    InitItem(&adaga, texAdaga, 915, 90);
     
     Map map;
     InitMap(&map); 
@@ -329,10 +333,13 @@ int main(void) {
 
                         inicioRun = GetTime();
                         
-                        helena->hearts = 3; 
+                        helena->hearts = 3;
+                        helena->damage = 20;
                         helena->active = true;
                         helena->rect.x = 100.0f; 
                         helena->rect.y = 400.0f;
+
+                        adaga.active = true; 
                     }
 
                     if (currentScreen == LEADERBOARD && proximaTela != LEADERBOARD) {
@@ -354,7 +361,8 @@ int main(void) {
                         StopMusicStream(musicGame);
                         PlayMusicStream(musicMenu);
 
-                        helena->hearts = 3; 
+                        helena->hearts = 3;
+                        helena->damage = 20;
                         helena->active = true;
                         helena->rect.x = 0; 
                         helena->rect.y = 520 - helena->rect.height; 
@@ -483,7 +491,16 @@ int main(void) {
                     currentScreen = GAMEOVER;
                 }
 
-                if (helena->InimigosMortos >= 1) {
+                if (map.currentArea == 5 && adaga.active) {
+                    UpdateItem(&adaga);
+
+                    if (CheckCollisionRecs(helena->rect, adaga.rect)) {
+                        adaga.active = false;
+                        helena->damage *= 2;
+                    }
+                }
+
+                if (helena->InimigosMortos >= 20) {
 
                     StopMusicStream(musicGame); 
                     PlayMusicStream(musicWin); 
@@ -932,6 +949,9 @@ int main(void) {
 
                     DrawMapPlatforms(&map);
 
+                    if (map.currentArea == 5) {
+                        DrawItem(&adaga);
+                    }
 
                     for (int i = 0; i < *enemiesStarted; i++) {
                         if (enemyList[i]->active == true) {
@@ -1040,9 +1060,9 @@ int main(void) {
     UnloadTexture(texEnemyAttack1);
     UnloadTexture(texEnemyAttack2);
 
-    UnloadTexture(texEnem0);
     UnloadTexture(menuBg);
 
+    UnloadImage(imgAdaga);
     UnloadMap(&map);
 
     free(helena);

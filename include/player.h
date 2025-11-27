@@ -17,6 +17,7 @@ typedef struct Player {
     Rectangle hitbox;
     bool facing; // 0 para a direita e 1 para a esquerda
     int hearts;
+    int damage;
     bool active;
     Texture currentTexture;
     Texture2D runTextures[4];

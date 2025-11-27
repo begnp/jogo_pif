@@ -89,7 +89,7 @@ A tela de menu oferece as seguintes opções:
 
 ## 🗺️ Estrutura do Mapa e Progressão
 
-**Metroid Leveling** Possui 1 mapa com **6 áreas interconectadas**, desafiando o jogador com inimigos e elementos de plataforma.
+**Metroid Leveling** Possui 1 mapa com **5 áreas interconectadas**, desafiando o jogador com inimigos e elementos de plataforma.
 
 
 ### 🌀 Área 1 – Início do portal
@@ -123,13 +123,6 @@ A tela de menu oferece as seguintes opções:
 
 ---
 
-###  Área 5 – Sala do boss
-
-- Nessa área, o jogador encontrará o **Boss** e algumas **plataformas**.
-- Essa parte é **totalmente diferente** da caverna inteira.
-
----
-
 ###  Área Secreta – Parte escondida da Caverna
 
 - Nessa área, o jogador encontrará um **item** que aumentará seu **dano**.
@@ -137,11 +130,11 @@ A tela de menu oferece as seguintes opções:
 
 ---
 
-### 👺 Desafio  – Derrotar o boss
+### 👺 Desafio  – Derrotar 20 inimigos
 
-- O **Boss** é um inimigo com mais vida, mais dano e com mecânicas especiais.
-- Sem derrota-lo, o jogador **não poderá sair do portal e zerar a demo**.
-- O jogador deve ter cuidado, melhor não subestimar o boss.
+- Os inimigos **respawnam** ao sair da área e voltar.
+- Sem derrota-los, o jogador **não poderá sair do portal e zerar a demo**.
+- O jogador deve ter cuidado, apesar de serem lentos e previsiveis um deslize e pode acabar morrendo.
 
 ---
 
@@ -157,7 +150,7 @@ A tela de menu oferece as seguintes opções:
 
 Confira os slides do nosso jogo:
 
-[Slides no canva](https://www.canva.com/design/DAG2kd-Ty2M/TDONgpOxUASnOd0O4GUaKQ/edit?utm_content=DAG2kd-Ty2M&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+[Slides no canva](https://www.canva.com/design/DAG52FNqzoU/cbrtNcsfOm-RGZ2SiHx_YA/edit?utm_content=DAG52FNqzoU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## 👥 Equipe de Desenvolvimento
 
