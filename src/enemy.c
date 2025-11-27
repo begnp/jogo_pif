@@ -6,7 +6,7 @@
 
 #define ENEMY_TIME_ATTACK 0.5
 #define ENEMY_COOLDOWN_ATTACK 0.4
-#define ENEMY_DELAY_ATTACK 0.5
+#define ENEMY_DELAY_ATTACK 0.4
 
 Enemy InitEnemy(Enemy *enemy, Texture2D initTex, int idEnemy, float posX, float posY) {
 
@@ -102,7 +102,7 @@ void DelayEnemyAttack(Enemy *enemy, Player *player, float time) {
 void StartEnemyAttack(Enemy *enemy, Player *player) {
     if (enemy->facing == 0) {
         enemy->hitbox = (Rectangle) {
-            (enemy->rect.x + (enemy->rect.width / 2)),
+            (enemy->rect.x + (enemy->rect.width * 0.6)),
             (enemy->rect.y + (enemy->rect.height * 0.1)),
             (enemy->rect.width * 0.8),
             (enemy->rect.height * 0.8)
@@ -110,7 +110,7 @@ void StartEnemyAttack(Enemy *enemy, Player *player) {
     }
     else if (enemy->facing == 1) {
         enemy->hitbox = (Rectangle) {
-            (enemy->rect.x - (enemy->rect.width * 0.3)),
+            (enemy->rect.x - (enemy->rect.width * 0.5)),
             (enemy->rect.y + (enemy->rect.height * 0.1)),
             (enemy->rect.width * 0.8),
             (enemy->rect.height * 0.8)
