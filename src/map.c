@@ -37,7 +37,7 @@ void LoadArea(Map *map, int areaIndex) {
 
             map->platforms[2] = (Rectangle){ 0, 0, 40, 350 }; 
 
-            map->platforms[3] = (Rectangle){ 960, 200, 40, 200 }; 
+            map->platforms[3] = (Rectangle){ 960, 200, 40, 400 }; 
 
             map->platforms[4] = (Rectangle){ 350, 440, 300, 20 };
             map->platforms[5] = (Rectangle){ 40, 320, 220, 20 };
