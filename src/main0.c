@@ -38,6 +38,7 @@ int main(void) {
     
     Music musicMenu = LoadMusicStream("assets/TrilhaSonoraMenu.mp3");
     Music musicGame = LoadMusicStream("assets/TrilhaSonoraMapa.mp3");
+    Music musicWin = LoadMusicStream("assets/TrilhaSonoraFinal");
     
     musicMenu.looping = true;
     musicGame.looping = true;
@@ -480,6 +481,14 @@ int main(void) {
                     
                     rankingCarregado = false;
                     currentScreen = GAMEOVER;
+                }
+
+                if (player.killCount >= 20) {
+
+                    StopMusicStream(musicGame); 
+                    PlayMusicStream(musicWin); 
+
+                    currentScreen = CREDITS; 
                 }
 
                 helena->velocity.x = 0;

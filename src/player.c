@@ -1,6 +1,6 @@
 #include "player.h"
 #include "enemy.h"
-
+#include <stdio.h>
 #define KEY_ATTACK KEY_SPACE
 #define TIME_ATTACK 0.36
 #define COOLDOWN_ATTACK 0.2
@@ -22,6 +22,7 @@ Player InitPlayer(Player *player, Texture2D initTex) {
     player->lastAttack = 0;
     player->hitbox = (Rectangle) {0, 0, 0, 0};
     player->facing = 0;
+    player->InimigosMortos = 0;
 
     return *player;
 }
@@ -62,10 +63,19 @@ void StartPlayerAttack(Player *player, Enemy *enemy, Map *map) {
     player->attacking = true;
     player->attackTime = GetTime();
 
-    if (CheckCollisionRecs(player->hitbox, enemy->rect)) {
+
+if (CheckCollisionRecs(player->hitbox, enemy->rect)) {
+    if (enemy->active) {
         enemy->health -= 20;
+        
+        if (enemy->health <= 0) {
+            player->InimigosMortos++; 
+            printf("Inimigos mortos: %d\n", player->InimigosMortos); 
+        }
+        
         IsEnemyAlive(enemy);
     }
+}
 
     if (map->wallActive) { 
         if (CheckCollisionRecs(player->hitbox, map->breakableWall)) {
