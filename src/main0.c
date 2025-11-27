@@ -584,6 +584,10 @@ int main(void) {
                             enemyList[i]->currentTexture = enemyList[i]->runTextures[enemyList[i]->currentFrame];
                         }
                     }
+                    else {
+                        enemyList[i]->currentTexture = enemyList[i]->idleTexture; 
+                        enemyList[i]->currentFrame = 0;
+                    }
                 }
                 
                 if (IsKeyDown(KEY_JUMP) && helena->canJump) {
