@@ -5,13 +5,13 @@
 Você assume o papel de Helena uma mulher de 21 anos que quando ainda era recém-nascida acabou perdendo seus pais num grande desastre,
 quando portais surgiram e abriram nos céus trazendo monstros com eles. Helena agora quer investigar os portais e você acompanhará o começo de sua jornada.
 
-![Intro](assets/IntroParte1.png)
+![Intro](assets\IntroParte1.png)
 
 *Imagem gerada com IA*
 
 ## Você consegue sair vivo do portal mesmo Helena não tendo poderes?
 
-![Intro](assets/IntroParte5.png)
+![Intro](assets\IntroParte5.png)
 
 *Imagem gerada com IA*
 
@@ -65,7 +65,7 @@ Caso tenha qualquer problema consulte a documentação da [RayLib para Linux](ht
 
 A tela de menu oferece as seguintes opções:
 
-![Menu](assets/Menu_Jogo.png)
+![Menu](assets\Menu_Jogo.png)
 
 - 🟡 **Jogar**: Inicia o jogo.
 - 🏆 **Ranking**: Visualiza os melhores tempos de quem concluiu o jogo.
@@ -143,6 +143,10 @@ A tela de menu oferece as seguintes opções:
 ---
 
 ## Vídeo Demonstrativo
+
+Confira aqui:
+
+[Youtube](https://www.youtube.com/watch?v=hJXfR3HCRLo)
 
 ---
 
