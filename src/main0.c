@@ -3,6 +3,7 @@
 #include "player.h"
 #include "menu.h"
 #include "map.h"
+#include "item.h"
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
