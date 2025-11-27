@@ -483,7 +483,7 @@ int main(void) {
                     currentScreen = GAMEOVER;
                 }
 
-                if (helena.killCount >= 20) {
+                if (helena->InimigosMortos >= 20) {
 
                     StopMusicStream(musicGame); 
                     PlayMusicStream(musicWin); 

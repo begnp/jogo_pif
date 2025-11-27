@@ -25,6 +25,8 @@ typedef struct Menu {
     Rectangle btnBack;
     Rectangle btnExit;
 
+    
+
     Color colorBgDark;      
     Color colorAccent;      
     Color colorText;        
